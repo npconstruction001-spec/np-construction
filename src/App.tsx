@@ -49,7 +49,7 @@ import imgAirAndElec from "./assets/images/regenerated_image_1779243350161.jpg";
 import imgPowerPlant from "./assets/images/regenerated_image_1779243351642.jpg";
 import imgBannerLeft from "./assets/images/banner_left_engineers_uniform_1779252458151.png";
 import imgBannerRight from "./assets/images/banner_right_workers_uniform_1779252795939.png";
-import imgAbout from "./assets/images/regenerated_image_1779251887070.jpg";
+import imgAbout from "./assets/images/regenerated_image_1779258325604.png";
 
 const NAV_LINKS = [
   { name: "หน้าแรก", href: "#home" },
