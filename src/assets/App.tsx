@@ -153,27 +153,67 @@ const SERVICES = [
 const PORTFOLIO = [
   {
     title: "เทสโก้ โลตัส (สาขาลพบุรี)",
-    category: "งานระบบ Interior",
+    category: "งาน Facade",
     image: imgTescoLotus,
-    fallback: imgTescoLotus
+    fallback: imgTescoLotus,
+    details: "โครงการปรับปรุงและติดตั้งระบบปรับอากาศอาคารขนาดใหญ่ (HVAC) ระบบท่อระบายลม งานสปริงเกลอร์ป้องกันอัคคีภัย และนำแผงวงจรสวิตช์จ่ายกำลังไฟฟ้า MDB เข้าประจำจุดตามมาตรฐานความปลอดภัยระดับสากล",
+    location: "จังหวัดลพบุรี",
+    duration: "65 วัน",
+    year: "พ.ศ. 2566",
+    scope: ["งานติดตั้งระบบไฟฟ้าส่องสว่างและกำลัง", "งานเดินระบบท่อปรับอากาศแยกส่วน (HVAC Split Systems)", "งานตกแต่งสถาปัตยกรรมภายใน (Interior Architecture Fit-out)"],
+    gallery: [
+      imgTescoLotus,
+      imgBannerLeft,
+      imgAbout
+    ]
   },
   {
     title: "ร้านคาเฟ่อเมซอน สาขา หทัยราษฎร์ 46 (โครงการหทัยพฤกษ์ marketplace)",
     category: "งานรับเหมาสร้างร้านค้าเชิงพาณิชย์ (Commercial Store Construction)",
     image: imgCafeAmazon,
-    fallback: imgCafeAmazon
+    fallback: imgCafeAmazon,
+    details: "งานก่อสร้างอาคารเหล็กสำเร็จรูปหลังคาสูงโปร่งตามเอกลักษณ์แบรนด์ คาเฟ่ อเมซอน ตั้งแต่หล่อปูนฐานรากเสาเข็มลึก เชื่อมโครงสร้างเหล็ก งานป้ายและไฟสปอตไลท์ส่องแต่งโดยรอบ ตลอดจนวางระบบจ่ายไฟและท่อน้ำบริสุทธิ์สำหรับงานเครื่องชงกาแฟ",
+    location: "หทัยราษฎร์ 46 กรุงเทพมหานคร",
+    duration: "45 วัน",
+    year: "พ.ศ. 2567",
+    scope: ["งานบูรณาการเสาเข็มและโครงสร้างตึกเหล็ก", "งานระบบสุขาภิบาลน้ำดื่มประปาประสิทธิภาพสูง", "งานวิศวกรรมไฟฟ้าแรงดันต่ำและติดตั้งโคมประดับตกแต่ง"],
+    gallery: [
+      imgCafeAmazon,
+      imgBannerRight,
+      imgPowerPlant
+    ]
   },
   {
     title: "ตึกอาคารสำนักงานประหยัดพลังงาน",
     category: "งานระบบปรับอากาศและไฟฟ้า",
     image: imgAirAndElec,
-    fallback: imgAirAndElec
+    fallback: imgAirAndElec,
+    details: "ออกแบบและเปลี่ยนระบบชิลเลอร์ทำความเย็นและสารแปรผันอัจฉริยะ (Variable Speed Condenser Unit) ในตึกออฟฟิศขนาด 5 ชั้น พร้อมเชื่อมต่อระบบตรวจสแกนปริมาณผู้ใช้อาคารแผงอุณหภูมิเพื่อประหยัดเชื้อเพลิงได้มากกว่า 30%",
+    location: "เขตจตุจักร กรุงเทพมหานคร",
+    duration: "90 วัน",
+    year: "พ.ศ. 2565",
+    scope: ["งานติดตั้งระบบควบคุม Variable Frequency Drive", "งานเดินวางช่องทางดักท์กระจายลมอัจฉริยะ", "งานเชื่อมต่อเครือข่ายเซ็นเซอร์ประหยัดพลังงาน IoT"],
+    gallery: [
+      imgAirAndElec,
+      imgTescoLotus,
+      imgAbout
+    ]
   },
   {
     title: "โครงการปรับปรุงระบบไฟฟ้าโรงไฟฟ้า",
     category: "งานระบบวิศวกรรมไฟฟ้า",
     image: imgPowerPlant,
-    fallback: imgPowerPlant
+    fallback: imgPowerPlant,
+    details: "บำรุงรักษาและติดตั้งชุดสถานีย่อยแรงดันสูง 22kV ติดตั้งตู้สวิตชิ่งพาวเวอร์วงจรหลัก (MDB Panels) บัสบาร์ ตลอดจนถาดรองรับสายไฟกันอัคคีภัย เพื่อป้อนพลังงานส่งต่อไปยังสายกำลังไฟกำลังสูงได้เสถียรภาพไร้รอยต่อ",
+    location: "อำเภอเมือง จังหวัดระยอง",
+    duration: "120 วัน",
+    year: "พ.ศ. 2566",
+    scope: ["งานลากสายเคเบิลระบบกำลังไฟแรงดัน 22kV ใต้ดิน", "งานบำรุงเปลี่ยนตู้แผงสเกล MDB ขนาด 2.5 MVA", "งานบูรณาห้องควบคุมกระแสแรงและคอนโซลหน้าสัมผัสดิจิทัล"],
+    gallery: [
+      imgPowerPlant,
+      imgBannerLeft,
+      imgAirAndElec
+    ]
   }
 ];
 
@@ -188,23 +228,26 @@ export default function App() {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
           return parsed.map((item: any, idx: number) => {
-            // If user uploaded their custom image via admin mode, keep it.
+            const defaults = (PORTFOLIO[idx] || {}) as any;
+            const enriched = {
+              ...defaults,
+              ...item
+            };
             if (item.image && item.image.startsWith("data:")) {
-              return item;
+              enriched.image = item.image;
+            } else {
+              if (idx === 0) enriched.image = imgTescoLotus;
+              if (idx === 1) enriched.image = imgCafeAmazon;
+              if (idx === 2) enriched.image = imgAirAndElec;
+              if (idx === 3) enriched.image = imgPowerPlant;
             }
-            // Update to high fidelity generated assets
-            if (idx === 0) return { ...item, image: imgTescoLotus, fallback: imgTescoLotus };
-            if (idx === 1) return { ...item, image: imgCafeAmazon, fallback: imgCafeAmazon };
-            if (idx === 2) {
-              return { 
-                ...item, 
-                title: item.title || "ตึกอาคารสำนักงานประหยัดพลังงาน", 
-                image: imgAirAndElec, 
-                fallback: imgAirAndElec 
-              };
+            if (!enriched.gallery || enriched.gallery.length === 0) {
+              enriched.gallery = defaults.gallery || [enriched.image];
             }
-            if (idx === 3) return { ...item, image: imgPowerPlant, fallback: imgPowerPlant };
-            return item;
+            if (enriched.category === "งานระบบ Interior") {
+              enriched.category = "งาน Facade";
+            }
+            return enriched;
           });
         }
       } catch (e) {
@@ -254,6 +297,13 @@ export default function App() {
 
   const [confirmDeleteIdx, setConfirmDeleteIdx] = useState<number | null>(null);
   const [confirmResetPortfolio, setConfirmResetPortfolio] = useState(false);
+  const [selectedProjectIdx, setSelectedProjectIdx] = useState<number | null>(null);
+  const [activeGalleryIdx, setActiveGalleryIdx] = useState<number>(0);
+  const [showSavedToast, setShowSavedToast] = useState(false);
+  const triggerSavedToast = () => {
+    setShowSavedToast(true);
+    setTimeout(() => setShowSavedToast(false), 3000);
+  };
   const [confirmResetVideo, setConfirmResetVideo] = useState(false);
 
   const [videoPlaylists, setVideoPlaylists] = useState<{ title: string; subtitle: string; videoUrl: string }[]>(() => {
@@ -364,6 +414,77 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("np_portfolio_data", JSON.stringify(portfolio));
   }, [portfolio]);
+
+  // --- Editable Website Text States (Autosaved to localStorage) ---
+  const [heroTitleL1, setHeroTitleL1] = useState(() => localStorage.getItem("np_txt_hero_l1") || "PRECISION");
+  const [heroTitleL2, setHeroTitleL2] = useState(() => localStorage.getItem("np_txt_hero_l2") || "ENGINEERING");
+  const [heroTitleGold, setHeroTitleGold] = useState(() => localStorage.getItem("np_txt_hero_gold") || "EXCELLENCE.");
+  const [heroSubtitle, setHeroSubtitle] = useState(() => localStorage.getItem("np_txt_hero_subtitle") || "ผู้นำด้านงานวิศวกรรมและรับเหมาก่อสร้างครบวงจร ด้วยมาตรฐานระดับสากลและทีมงานมืออาชีพ");
+
+  const [aboutTitleL1, setAboutTitleL1] = useState(() => localStorage.getItem("np_txt_about_l1") || "Professional");
+  const [aboutTitleGold, setAboutTitleGold] = useState(() => localStorage.getItem("np_txt_about_gold") || "Solutions");
+  const [aboutDesc, setAboutDesc] = useState(() => localStorage.getItem("np_txt_about_desc") || "หจก. เอ็นพี คอนดักชั่น เริ่มต้นจากความหลงใหลในงานวิศวกรรมที่มีความซับซ้อน เรามุ่งเน้นการส่งมอบงานระบบไฟฟ้าและเครื่องกลที่มีความเสถียรสูงสุด");
+  const [aboutBullets, setAboutBullets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("np_txt_about_bullets");
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return ["มาตรฐานความปลอดภัยระดับสากล", "วิศวกรวิชาชีพควบคุมทุกขั้นตอน", "เทคโนโลยีการวัดคุมที่ทันสมัย"];
+  });
+
+  const [servicesData, setServicesData] = useState(() => {
+    const saved = localStorage.getItem("np_txt_services");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return SERVICES;
+  });
+
+  const [servicesSectionTitle, setServicesSectionTitle] = useState(() => localStorage.getItem("np_txt_services_sec_title") || "Comprehensive");
+  const [servicesSectionGold, setServicesSectionGold] = useState(() => localStorage.getItem("np_txt_services_sec_gold") || "Capabilities");
+  const [servicesSectionDesc, setServicesSectionDesc] = useState(() => localStorage.getItem("np_txt_services_sec_desc") || "เรานำเสนอบริการทางวิศวกรรมที่ครอบคลุม ตั้งแต่การออกแบบเบื้องต้นไปจนถึงการติดตั้งและบำรุงรักษาเชิงป้องกัน เพื่อให้โครงการของคุณดำเนินงานได้อย่างไร้รอยต่อ");
+
+  useEffect(() => {
+    localStorage.setItem("np_txt_hero_l1", heroTitleL1);
+  }, [heroTitleL1]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_hero_l2", heroTitleL2);
+  }, [heroTitleL2]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_hero_gold", heroTitleGold);
+  }, [heroTitleGold]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_hero_subtitle", heroSubtitle);
+  }, [heroSubtitle]);
+
+  useEffect(() => {
+    localStorage.setItem("np_txt_about_l1", aboutTitleL1);
+  }, [aboutTitleL1]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_about_gold", aboutTitleGold);
+  }, [aboutTitleGold]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_about_desc", aboutDesc);
+  }, [aboutDesc]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_about_bullets", JSON.stringify(aboutBullets));
+  }, [aboutBullets]);
+
+  useEffect(() => {
+    localStorage.setItem("np_txt_services", JSON.stringify(servicesData));
+  }, [servicesData]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_services_sec_title", servicesSectionTitle);
+  }, [servicesSectionTitle]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_services_sec_gold", servicesSectionGold);
+  }, [servicesSectionGold]);
+  useEffect(() => {
+    localStorage.setItem("np_txt_services_sec_desc", servicesSectionDesc);
+  }, [servicesSectionDesc]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -548,17 +669,83 @@ export default function App() {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="relative z-10 space-y-8"
+              className="relative z-10 space-y-8 w-full"
             >
               <div className="gold-line"></div>
-              <h1 className="text-6xl md:text-8xl text-white leading-[0.85] tracking-tighter font-display font-black">
-                PRECISION<br />
-                ENGINEERING<br />
-                <span className="text-gold font-tech">EXCELLENCE.</span>
-              </h1>
-              <p className="text-xl text-slate-300 font-light leading-relaxed max-w-md">
-                ผู้นำด้านงานวิศวกรรมและรับเหมาก่อสร้างครบวงจร ด้วยมาตรฐานระดับสากลและทีมงานมืออาชีพ
-              </p>
+              {isAdminMode ? (
+                <div className="bg-navy-dark/95 border border-gold/40 p-6 rounded-sm space-y-4 max-w-lg shadow-2xl relative">
+                  <span className="text-[10px] font-mono tracking-widest uppercase text-gold block font-black">✍️ แก้ไขหัวข้อต้อนรับ (HERO SECTION)</span>
+                  <div className="space-y-1">
+                    <label className="text-[8px] font-mono uppercase text-slate-400 block font-bold">หัวเรื่อง บรรทัดแรก</label>
+                    <input
+                      type="text"
+                      value={heroTitleL1}
+                      onChange={(e) => setHeroTitleL1(e.target.value)}
+                      className="w-full bg-navy-light border border-white/20 text-white rounded p-1.5 focus:border-gold text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[8px] font-mono uppercase text-slate-400 block font-bold">หัวเรื่อง บรรทัดสอง</label>
+                    <input
+                      type="text"
+                      value={heroTitleL2}
+                      onChange={(e) => setHeroTitleL2(e.target.value)}
+                      className="w-full bg-navy-light border border-white/20 text-white rounded p-1.5 focus:border-gold text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[8px] font-mono uppercase text-slate-400 block font-bold">คำเน้นแบรนด์สีทอง (ทอง)</label>
+                    <input
+                      type="text"
+                      value={heroTitleGold}
+                      onChange={(e) => setHeroTitleGold(e.target.value)}
+                      className="w-full bg-navy-light border border-white/20 text-gold rounded p-1.5 focus:border-gold text-xs font-bold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[8px] font-mono uppercase text-slate-400 block font-bold">คำอธิบายภาพรวมนโยบาย</label>
+                    <textarea
+                      value={heroSubtitle}
+                      onChange={(e) => setHeroSubtitle(e.target.value)}
+                      rows={3}
+                      className="w-full bg-navy-light border border-white/20 text-slate-200 rounded p-1.5 focus:border-gold text-xs"
+                    />
+                  </div>
+                  <div className="pt-2 flex flex-col gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        triggerSavedToast();
+                      }}
+                      className="w-full bg-gold hover:bg-amber-400 text-navy-dark py-2.5 rounded-sm text-[10px] font-mono font-black uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow"
+                    >
+                      <span>💾 ยืนยันการบันทึกข้อความส่วนนี้</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsAdminMode(false);
+                        triggerSavedToast();
+                      }}
+                      className="w-full bg-white/10 hover:bg-white/15 text-white py-2 rounded-sm text-[9px] font-mono tracking-wider uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <span>✔️ ยืนยันข้อมูลทั้งหมด &amp; ออกจากโหมดแก้ไข</span>
+                    </button>
+                  </div>
+                  <p className="text-[8px] text-slate-400 font-mono">⚠️ ระบบได้รับการตั้งค่าเซฟแบบวินาทีต่อวินาทีลงในเบราว์เซอร์แล้วค่ะ</p>
+                </div>
+              ) : (
+                <>
+                  <h1 className="text-6xl md:text-8xl text-white leading-[0.85] tracking-tighter font-display font-black">
+                    {heroTitleL1}<br />
+                    {heroTitleL2}<br />
+                    <span className="text-gold font-tech">{heroTitleGold}</span>
+                  </h1>
+                  <p className="text-xl text-slate-300 font-light leading-relaxed max-w-md">
+                    {heroSubtitle}
+                  </p>
+                </>
+              )}
               <div className="flex flex-col sm:flex-row gap-6 pt-4">
                 <a href="#services" className="bg-gold text-navy-dark px-10 py-5 text-[10px] font-mono font-black uppercase tracking-[0.2em] hover:bg-gold-hover transition-all shadow-2xl">
                   Explore Services
@@ -615,30 +802,93 @@ export default function App() {
                 viewport={{ once: true }}
                 className="space-y-8"
               >
-                <div className="space-y-2">
-                  <span className="label-small uppercase">About Us</span>
-                  <h2 className="text-4xl md:text-5xl tracking-tighter uppercase leading-[0.9] font-tech">
-                    Professional <br /><span className="text-gold">Solutions</span>
-                  </h2>
-                </div>
-                <p className="text-lg text-slate-500 font-light leading-relaxed">
-                  หจก. เอ็นพี คอนดักชั่น เริ่มต้นจากความหลงใหลในงานวิศวกรรมที่มีความซับซ้อน 
-                  เรามุ่งเน้นการส่งมอบงานระบบไฟฟ้าและเครื่องกลที่มีความเสถียรสูงสุด
-                </p>
-                <div className="grid grid-cols-1 gap-6">
-                  {[
-                    "มาตรฐานความปลอดภัยระดับสากล",
-                    "วิศวกรวิชาชีพควบคุมทุกขั้นตอน",
-                    "เทคโนโลยีการวัดคุมที่ทันสมัย"
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-4 pb-4 border-b border-slate-100 group">
-                      <div className="w-8 h-8 bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:border-gold transition-colors">
-                        <div className="w-1.5 h-1.5 bg-gold"></div>
-                      </div>
-                      <span className="text-xs font-bold uppercase tracking-widest text-navy-dark font-tech">{item}</span>
+                {isAdminMode ? (
+                  <div className="bg-slate-50 border border-slate-350 p-6 rounded-sm space-y-4 w-full shadow-lg relative">
+                    <span className="text-[10px] font-mono tracking-widest uppercase text-navy-dark block font-black">✍️ แก้ไขหน้ารายละเอียดเกี่ยวกับเรา (ABOUT SECTION)</span>
+                    <div className="space-y-1">
+                      <label className="text-[8px] font-mono uppercase text-slate-500 block font-bold">หัวเรื่องหลัก</label>
+                      <input
+                        type="text"
+                        value={aboutTitleL1}
+                        onChange={(e) => setAboutTitleL1(e.target.value)}
+                        className="w-full bg-white border border-slate-300 text-navy-dark rounded p-1.5 focus:border-gold text-xs"
+                      />
                     </div>
-                  ))}
-                </div>
+                    <div className="space-y-1">
+                      <label className="text-[8px] font-mono uppercase text-slate-500 block font-bold">คำลงท้ายสีทอง</label>
+                      <input
+                        type="text"
+                        value={aboutTitleGold}
+                        onChange={(e) => setAboutTitleGold(e.target.value)}
+                        className="w-full bg-white border border-slate-300 text-gold rounded p-1.5 focus:border-gold text-xs font-bold"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[8px] font-mono uppercase text-slate-500 block font-bold">ย่อหน้าคำจำกัดความ / ความเป็นมา</label>
+                      <textarea
+                        value={aboutDesc}
+                        onChange={(e) => setAboutDesc(e.target.value)}
+                        rows={4}
+                        className="w-full bg-white border border-slate-300 text-slate-600 rounded p-1.5 focus:border-gold text-xs font-sans leading-relaxed"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[8px] font-mono uppercase text-slate-500 block font-bold">หัวข้อสัญลักษณ์ 3 ข้อ (หนึ่งข้อต่อหนึ่งบรรทัด)</label>
+                      <textarea
+                        value={aboutBullets.join("\n")}
+                        onChange={(e) => setAboutBullets(e.target.value.split("\n"))}
+                        rows={3}
+                        className="w-full bg-white border border-slate-300 text-slate-600 rounded p-1.5 focus:border-gold text-xs font-mono whitespace-pre"
+                      />
+                    </div>
+                    <div className="pt-2 flex flex-col gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          triggerSavedToast();
+                        }}
+                        className="w-full bg-navy-dark hover:bg-navy-light text-white py-2.5 rounded-sm text-[10px] font-mono font-black uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow"
+                      >
+                        <span>💾 ยืนยันการบันทึกข้อความส่วนนี้</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsAdminMode(false);
+                          triggerSavedToast();
+                        }}
+                        className="w-full bg-gold hover:bg-amber-400 text-navy-dark py-2 rounded-sm text-[9px] font-mono tracking-wider uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                      >
+                        <span>✔️ ยืนยันข้อมูลทั้งหมด &amp; ออกจากโหมดแก้ไข</span>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="space-y-2">
+                      <span className="label-small uppercase">About Us</span>
+                      <h2 className="text-4xl md:text-5xl tracking-tighter uppercase leading-[0.9] font-tech">
+                        {aboutTitleL1} <br /><span className="text-gold">{aboutTitleGold}</span>
+                      </h2>
+                    </div>
+                    <p className="text-lg text-slate-500 font-light leading-relaxed">
+                      {aboutDesc}
+                    </p>
+                    <div className="grid grid-cols-1 gap-6">
+                      {aboutBullets.map((item, idx) => {
+                        if (!item.trim()) return null;
+                        return (
+                          <div key={idx} className="flex items-center gap-4 pb-4 border-b border-slate-100 group">
+                            <div className="w-8 h-8 bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:border-gold transition-colors">
+                              <div className="w-1.5 h-1.5 bg-gold"></div>
+                            </div>
+                            <span className="text-xs font-bold uppercase tracking-widest text-navy-dark font-tech">{item}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
               </motion.div>
             </div>
           </div>
@@ -650,20 +900,50 @@ export default function App() {
             <div className="editorial-grid gap-12 mb-20">
               <div className="col-span-12 lg:col-span-6 space-y-4">
                 <span className="label-small text-gold">What We Do</span>
-                <h2 className="text-4xl md:text-6xl tracking-tighter uppercase leading-[0.9]">
-                  Comprehensive <br /><span className="text-gold">Capabilities</span>
-                </h2>
+                {isAdminMode ? (
+                  <div className="space-y-2 bg-white/90 p-4 border border-slate-200 rounded-sm shadow">
+                    <span className="text-[9px] font-mono text-slate-500 uppercase font-black block">หัวข้อหลัก</span>
+                    <input
+                      type="text"
+                      value={servicesSectionTitle}
+                      onChange={(e) => setServicesSectionTitle(e.target.value)}
+                      className="bg-white border rounded p-1.5 text-navy-dark text-sm font-sans tracking-tight leading-none font-bold w-full"
+                    />
+                    <label className="text-[8px] font-mono uppercase text-slate-500 block font-bold mt-1">คำเชื่อมสีทอง</label>
+                    <input
+                      type="text"
+                      value={servicesSectionGold}
+                      onChange={(e) => setServicesSectionGold(e.target.value)}
+                      className="bg-white border text-gold text-sm font-sans tracking-tight p-1.5 w-full font-bold"
+                    />
+                  </div>
+                ) : (
+                  <h2 className="text-4xl md:text-6xl tracking-tighter uppercase leading-[0.9]">
+                    {servicesSectionTitle} <br /><span className="text-gold">{servicesSectionGold}</span>
+                  </h2>
+                )}
               </div>
               <div className="col-span-12 lg:col-span-6 flex items-end">
-                <p className="text-slate-500 font-light text-lg">
-                  เรานำเสนอบริการทางวิศวกรรมที่ครอบคลุม ตั้งแต่การออกแบบเบื้องต้นไปจนถึงการติดตั้งและบำรุงรักษาเชิงป้องกัน 
-                  เพื่อให้โครงการของคุณดำเนินงานได้อย่างไร้รอยต่อ
-                </p>
+                {isAdminMode ? (
+                  <div className="w-full space-y-1 bg-white/90 p-4 border border-slate-200 rounded-sm shadow">
+                    <span className="text-[9px] font-mono text-slate-500 uppercase font-black block">คำบรรยายหัวข้อคุณความถนัด</span>
+                    <textarea
+                      value={servicesSectionDesc}
+                      onChange={(e) => setServicesSectionDesc(e.target.value)}
+                      rows={3}
+                      className="w-full bg-white border border-slate-200 rounded p-1.5 text-xs text-slate-600 leading-relaxed font-sans"
+                    />
+                  </div>
+                ) : (
+                  <p className="text-slate-500 font-light text-lg">
+                    {servicesSectionDesc}
+                  </p>
+                )}
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-l border-slate-200">
-              {SERVICES.map((service, idx) => (
+              {servicesData.map((service, idx) => (
                 <motion.div
                   key={idx}
                   initial={{ opacity: 0 }}
@@ -675,23 +955,107 @@ export default function App() {
                   <div className="w-12 h-12 bg-paper flex items-center justify-center border border-slate-100 group-hover:border-gold/30 mb-10 transition-colors">
                     <div className="w-2 h-2 bg-gold"></div>
                   </div>
-                  <h3 className="text-sm font-black uppercase tracking-[0.2em] mb-6 text-navy-dark group-hover:text-gold transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 group-hover:text-slate-400 mb-8 leading-relaxed font-medium">
-                    {service.description}
-                  </p>
-                  <ul className="space-y-3">
-                    {service.details.map((detail, dIdx) => (
-                      <li key={dIdx} className="text-[10px] uppercase font-bold tracking-widest text-slate-400 group-hover:text-slate-500 flex items-center gap-2">
-                        <ChevronRight size={10} className="text-gold" />
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
+                  {isAdminMode ? (
+                    <div className="space-y-4 font-sans text-left" onClick={(e) => e.stopPropagation()}>
+                      <div className="space-y-1">
+                        <span className="text-[8px] font-mono text-gold block font-bold">🛠️ หัวข้อวิศวกรรมหลัก</span>
+                        <input
+                          type="text"
+                          value={service.title}
+                          onChange={(e) => {
+                            const updated = [...servicesData];
+                            updated[idx] = { ...service, title: e.target.value };
+                            setServicesData(updated);
+                          }}
+                          className="bg-slate-50 text-navy-dark text-xs font-bold font-sans tracking-normal p-1.5 border w-full rounded focus:border-gold"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[8px] font-mono text-gold block font-bold">📄 คำจำกัดความขอบเขตงาน</span>
+                        <textarea
+                          value={service.description}
+                          onChange={(e) => {
+                            const updated = [...servicesData];
+                            updated[idx] = { ...service, description: e.target.value };
+                            setServicesData(updated);
+                          }}
+                          className="bg-slate-50 text-navy-dark text-[10px] p-1.5 border w-full rounded focus:border-gold leading-normal font-sans"
+                          rows={3}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[8px] font-mono text-gold block font-bold">📝 รายการย่อยผลิตภัณฑ์ (ขึ้นบรรทัดใหม่)</span>
+                        <textarea
+                          value={service.details.join("\n")}
+                          onChange={(e) => {
+                            const updated = [...servicesData];
+                            updated[idx] = { ...service, details: e.target.value.split("\n") };
+                            setServicesData(updated);
+                          }}
+                          className="bg-slate-50 font-mono text-navy-dark text-[9px] p-1.5 border w-full rounded focus:border-gold whitespace-pre"
+                          rows={3}
+                        />
+                      </div>
+                      <div className="pt-2 flex flex-col gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            triggerSavedToast();
+                          }}
+                          className="w-full bg-gold hover:bg-amber-400 text-navy-dark py-1.5 rounded-sm text-[9px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 shadow"
+                        >
+                          <span>💾 บันทึกการ์ดใบนี้</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <h3 className="text-sm font-black uppercase tracking-[0.2em] mb-6 text-navy-dark group-hover:text-gold transition-colors">
+                        {service.title}
+                      </h3>
+                      <p className="text-xs text-slate-500 group-hover:text-slate-400 mb-8 leading-relaxed font-medium">
+                        {service.description}
+                      </p>
+                      <ul className="space-y-3">
+                        {service.details.map((detail: string, dIdx: number) => {
+                          if (!detail.trim()) return null;
+                          return (
+                            <li key={dIdx} className="text-[10px] uppercase font-bold tracking-widest text-slate-400 group-hover:text-slate-500 flex items-center gap-2">
+                              <ChevronRight size={10} className="text-gold" />
+                              {detail}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </>
+                  )}
                 </motion.div>
               ))}
             </div>
+
+            {isAdminMode && (
+              <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerSavedToast();
+                  }}
+                  className="bg-navy-dark hover:bg-navy-light text-white px-8 py-3.5 text-[10px] font-mono font-black uppercase tracking-widest rounded transition-all cursor-pointer border border-gold/20 flex items-center gap-2"
+                >
+                  <span>💾 บันทึกข้อมูลงานบริการหลักทั้งหมด</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAdminMode(false);
+                    triggerSavedToast();
+                  }}
+                  className="bg-gold hover:bg-amber-400 text-navy-dark px-8 py-3.5 text-[10px] font-mono font-black uppercase tracking-widest rounded transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <span>✔️ ยืนยันข้อความ &amp; ปิดโหมดผู้ดูแล</span>
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
@@ -1619,15 +1983,27 @@ export default function App() {
             {/* Grid of Portfolio projects */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {portfolio.map((proj, idx) => (
-                <div key={idx} className="group relative bg-[#0B1528] overflow-hidden border border-slate-100 shadow-xl rounded-sm aspect-[4/3] flex flex-col justify-end">
+                <div 
+                  key={idx} 
+                  onClick={() => {
+                    setSelectedProjectIdx(idx);
+                    setActiveGalleryIdx(0);
+                  }}
+                  className="group relative bg-[#0B1528] overflow-hidden border border-slate-100 shadow-xl rounded-sm aspect-[4/3] flex flex-col justify-end cursor-pointer hover:border-gold/50 hover:shadow-2xl transition-all duration-300"
+                >
                   <img
                     src={proj.image || proj.fallback}
                     alt={proj.title}
                     referrerPolicy="no-referrer"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/30 to-transparent z-10"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/30 to-transparent z-10 transition-opacity group-hover:opacity-90"></div>
                   
+                  {/* Interactive Hint Badge */}
+                  <div className="absolute top-4 left-4 z-20 bg-gold/90 text-navy-dark text-[9px] font-mono font-black uppercase tracking-widest px-2.5 py-1.5 rounded-sm opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300 flex items-center gap-1">
+                    <span>🔍 ดูรายละเอียด & รูปงาน</span>
+                  </div>
+
                   <div className="relative z-20 p-6 flex flex-col justify-end h-full">
                     <span className="text-[10px] text-gold font-mono uppercase tracking-widest">{proj.category}</span>
                     <h3 className="text-sm font-bold text-white uppercase mt-1 leading-tight line-clamp-2">{proj.title}</h3>
@@ -1635,7 +2011,7 @@ export default function App() {
 
                   {/* Admin actions inside the project card */}
                   {isAdminMode && (
-                    <div className="absolute top-4 right-4 z-30">
+                    <div className="absolute top-4 right-4 z-30" onClick={(e) => e.stopPropagation()}>
                       {confirmDeleteIdx === idx ? (
                         <div className="bg-red-600 text-white p-2 rounded-sm text-[10px] font-bold flex flex-col gap-1 shadow-lg">
                           <span>ลบรายการนี้?</span>
@@ -1646,6 +2022,9 @@ export default function App() {
                                 const filtered = portfolio.filter((_, i) => i !== idx);
                                 setPortfolio(filtered);
                                 setConfirmDeleteIdx(null);
+                                if (selectedProjectIdx === idx) {
+                                  setSelectedProjectIdx(null);
+                                }
                               }}
                               className="bg-white text-red-600 px-1.5 py-0.5 rounded-sm font-bold cursor-pointer"
                             >
@@ -1679,6 +2058,331 @@ export default function App() {
                 </div>
               ))}
             </div>
+
+            {/* Dynamic Interactive Project Detail Modal */}
+            <AnimatePresence>
+              {selectedProjectIdx !== null && portfolio[selectedProjectIdx] && (() => {
+                const proj = portfolio[selectedProjectIdx];
+                const galleryList = proj.gallery || [proj.image || proj.fallback];
+                const activeImage = galleryList[activeGalleryIdx] || proj.image || proj.fallback;
+
+                return (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[110] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 md:p-8 font-sans overflow-y-auto"
+                    onClick={() => setSelectedProjectIdx(null)}
+                  >
+                    <motion.div
+                      initial={{ scale: 0.95, y: 30 }}
+                      animate={{ scale: 1, y: 0 }}
+                      exit={{ scale: 0.95, y: 30 }}
+                      className="w-full max-w-5xl bg-navy-dark text-white border border-gold/30 shadow-[0_30px_60px_rgba(0,0,0,0.9)] rounded-sm overflow-hidden flex flex-col relative my-auto"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Top Header Controls */}
+                      <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+                        <button
+                          onClick={() => setSelectedProjectIdx(null)}
+                          className="bg-navy-light/80 hover:bg-gold hover:text-navy-dark text-white p-2.5 rounded-sm transition-all shadow-md cursor-pointer border border-white/10"
+                        >
+                          <X size={18} />
+                        </button>
+                      </div>
+
+                      {/* Modal Content Grid */}
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-y-auto max-h-[90vh]">
+                        {/* Left Side: Images & Gallery (7 Cols) */}
+                        <div className="lg:col-span-7 bg-[#050C18] p-6 flex flex-col gap-4 border-r border-white/5">
+                          {/* Active Large Image Display */}
+                          <div className="aspect-[4/3] md:aspect-video w-full overflow-hidden border border-white/10 relative rounded-sm bg-black flex items-center justify-center">
+                            <img
+                              src={activeImage}
+                              alt={proj.title}
+                              referrerPolicy="no-referrer"
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex justify-between items-end">
+                              <span className="text-[10px] text-gold font-mono tracking-widest bg-navy-dark/80 px-2 py-1 rounded border border-gold/10 uppercase">
+                                รูปประกอบที่ {activeGalleryIdx + 1} / {galleryList.length}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Gallery Thumbnail Strip */}
+                          <div className="space-y-2 mt-2">
+                            <span className="text-[9px] font-mono tracking-wider text-slate-400 block uppercase">
+                              🖼️ อัลบั้มภาพระบบงาน / Job-Site Actions ({galleryList.length})
+                            </span>
+                            <div className="flex flex-wrap gap-2.5">
+                              {galleryList.map((gImg: string, gIdx: number) => (
+                                <div
+                                  key={gIdx}
+                                  onClick={() => setActiveGalleryIdx(gIdx)}
+                                  className={`relative w-16 h-12 bg-black overflow-hidden rounded-sm border cursor-pointer transition-all ${
+                                    activeGalleryIdx === gIdx
+                                      ? "border-gold scale-105 shadow-md shadow-gold/15"
+                                      : "border-white/10 opacity-70 hover:opacity-100"
+                                  }`}
+                                >
+                                  <img
+                                    src={gImg}
+                                    alt="thumbnail"
+                                    referrerPolicy="no-referrer"
+                                    className="w-full h-full object-cover"
+                                  />
+                                  {isAdminMode && galleryList.length > 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const updatedGallery = galleryList.filter((_, idxFilter) => idxFilter !== gIdx);
+                                        const updated = [...portfolio];
+                                        updated[selectedProjectIdx] = {
+                                          ...proj,
+                                          gallery: updatedGallery,
+                                          image: gIdx === 0 && updatedGallery[0] ? updatedGallery[0] : proj.image
+                                        };
+                                        setPortfolio(updated);
+                                        localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                        setActiveGalleryIdx(0);
+                                      }}
+                                      className="absolute top-0.5 right-0.5 bg-red-650 hover:bg-red-750 text-white text-[8px] p-0.5 rounded shadow cursor-pointer flex items-center justify-center"
+                                      title="ลบรูปภาพนี้"
+                                    >
+                                      🗑️
+                                    </button>
+                                  )}
+                                </div>
+                              ))}
+
+                              {/* Upload New Photo to Gallery (Admin Mode) */}
+                              {isAdminMode && (
+                                <label className="w-16 h-12 flex flex-col items-center justify-center border border-dashed border-gold/40 hover:border-gold rounded-sm bg-gold/5 hover:bg-gold/10 cursor-pointer transition-all text-gold">
+                                  <UploadCloud size={14} />
+                                  <span className="text-[7px] font-mono text-center font-bold mt-1 uppercase">ADD PHOTO</span>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = (event) => {
+                                          const result = event.target?.result as string;
+                                          if (result) {
+                                            const updatedGallery = [...galleryList, result];
+                                            const updated = [...portfolio];
+                                            updated[selectedProjectIdx] = {
+                                              ...proj,
+                                              gallery: updatedGallery
+                                            };
+                                            setPortfolio(updated);
+                                            localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                            setActiveGalleryIdx(updatedGallery.length - 1);
+                                          }
+                                        };
+                                        reader.readAsDataURL(file);
+                                      }
+                                    }}
+                                  />
+                                </label>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Right Side: Details Sheet & Info (5 Cols) */}
+                        <div className="lg:col-span-5 p-8 flex flex-col justify-between bg-navy-dark h-full">
+                          <div className="space-y-6">
+                            {/* Category Badge & Code */}
+                            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                              <div>
+                                {isAdminMode ? (
+                                  <input
+                                    type="text"
+                                    value={proj.category}
+                                    onChange={(e) => {
+                                      const updated = [...portfolio];
+                                      updated[selectedProjectIdx] = { ...proj, category: e.target.value };
+                                      setPortfolio(updated);
+                                      localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                    }}
+                                    className="bg-navy-light text-gold text-xs font-mono font-bold uppercase tracking-wider px-2 py-1.5 border border-white/10 rounded w-full border-solid"
+                                  />
+                                ) : (
+                                  <span className="text-xs text-gold font-mono font-bold uppercase tracking-wider">
+                                    {proj.category}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-[9px] font-mono font-black text-white/40">NP-PROJECT #{selectedProjectIdx + 1}</span>
+                            </div>
+
+                            {/* Project Main Title */}
+                            <div>
+                              {isAdminMode ? (
+                                <input
+                                  type="text"
+                                  value={proj.title}
+                                  onChange={(e) => {
+                                    const updated = [...portfolio];
+                                    updated[selectedProjectIdx] = { ...proj, title: e.target.value };
+                                    setPortfolio(updated);
+                                    localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                  }}
+                                  className="bg-navy-light text-white text-md font-bold border border-white/10 rounded w-full p-2 font-sans"
+                                />
+                              ) : (
+                                <h3 className="text-xl md:text-2xl font-bold font-sans tracking-tight text-white leading-normal">
+                                  {proj.title}
+                                </h3>
+                              )}
+                            </div>
+
+                            {/* Tech Spec Sheet Grid */}
+                            <div className="grid grid-cols-2 gap-4 bg-navy-light/40 p-4 border border-white/5 rounded">
+                              <div>
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block font-bold">📍 สถานที่</span>
+                                {isAdminMode ? (
+                                  <input
+                                    type="text"
+                                    value={proj.location || ""}
+                                    onChange={(e) => {
+                                      const updated = [...portfolio];
+                                      updated[selectedProjectIdx] = { ...proj, location: e.target.value };
+                                      setPortfolio(updated);
+                                      localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                    }}
+                                    className="bg-navy-light text-white text-xs border border-white/10 rounded w-full mt-1 p-1"
+                                  />
+                                ) : (
+                                  <span className="text-xs font-medium text-slate-200 mt-0.5 block">{proj.location || "-"}</span>
+                                )}
+                              </div>
+                              <div>
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block font-bold">⏱️ ระยะเวลาก่อสร้าง</span>
+                                {isAdminMode ? (
+                                  <input
+                                    type="text"
+                                    value={proj.duration || ""}
+                                    onChange={(e) => {
+                                      const updated = [...portfolio];
+                                      updated[selectedProjectIdx] = { ...proj, duration: e.target.value };
+                                      setPortfolio(updated);
+                                      localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                    }}
+                                    className="bg-navy-light text-white text-xs border border-white/10 rounded w-full mt-1 p-1"
+                                  />
+                                ) : (
+                                  <span className="text-xs font-medium text-slate-200 mt-0.5 block">{proj.duration || "-"}</span>
+                                )}
+                              </div>
+                              <div className="col-span-2 border-t border-white/5 pt-3">
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block font-bold">📅 ปีที่แล้วเสร็จ</span>
+                                {isAdminMode ? (
+                                  <input
+                                    type="text"
+                                    value={proj.year || ""}
+                                    onChange={(e) => {
+                                      const updated = [...portfolio];
+                                      updated[selectedProjectIdx] = { ...proj, year: e.target.value };
+                                      setPortfolio(updated);
+                                      localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                    }}
+                                    className="bg-navy-light text-white text-xs border border-white/10 rounded w-full mt-1 p-1"
+                                  />
+                                ) : (
+                                  <span className="text-xs font-medium text-gold mt-0.5 block">{proj.year || "-"}</span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Details Paragraph */}
+                            <div className="space-y-2">
+                              <span className="text-[10px] font-mono uppercase tracking-wider text-gold block font-bold">📄 รายละเอียดโครงการ</span>
+                              {isAdminMode ? (
+                                <textarea
+                                  value={proj.details || ""}
+                                  onChange={(e) => {
+                                    const updated = [...portfolio];
+                                    updated[selectedProjectIdx] = { ...proj, details: e.target.value };
+                                    setPortfolio(updated);
+                                    localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                  }}
+                                  rows={4}
+                                  className="bg-navy-light text-slate-200 text-xs border border-white/10 rounded w-full p-2 font-sans focus:border-gold outline-none"
+                                />
+                              ) : (
+                                <p className="text-xs text-slate-300 font-light leading-relaxed font-sans">
+                                  {proj.details || "ไม่มีข้อมูลรายละเอียดในสัญญางานนี้..."}
+                                </p>
+                              )}
+                            </div>
+
+                            {/* List of Scopes checklist */}
+                            <div className="space-y-2.5">
+                              <span className="text-[10px] font-mono uppercase tracking-wider text-gold block font-bold">🔧 งานระบบที่ดำเนินการหลัก</span>
+                              {isAdminMode ? (
+                                <div className="space-y-1">
+                                  <textarea
+                                    value={(proj.scope || []).join("\n")}
+                                    placeholder="ใส่ขอบเขตงานบรรทัดละรายการ"
+                                    onChange={(e) => {
+                                      const lines = e.target.value.split("\n");
+                                      const updated = [...portfolio];
+                                      updated[selectedProjectIdx] = { ...proj, scope: lines };
+                                      setPortfolio(updated);
+                                      localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+                                    }}
+                                    rows={3}
+                                    className="bg-navy-light text-slate-200 text-xs border border-white/10 rounded w-full p-2 font-sans focus:border-gold outline-none whitespace-pre"
+                                  />
+                                  <span className="text-[8px] text-slate-400 font-mono block">เคล็ดลับ: เครื่องหมายจุดขึ้นบรรทัดใหม่ คือการสร้าง Bullet point 📝</span>
+                                </div>
+                              ) : (
+                                <div className="flex flex-col gap-2">
+                                  {(proj.scope || ["งานร้อยสายและเชื่อมระบบหลัก"]).map((sc: string, scI: number) => (
+                                    <div key={scI} className="flex gap-2.5 items-start">
+                                      <CheckCircle2 size={13} className="text-gold shrink-0 mt-0.5" />
+                                      <span className="text-[11px] font-sans text-slate-200 font-light leading-snug">{sc}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Footer action button inside Modal */}
+                          <div className="border-t border-white/10 pt-6 mt-8 flex justify-end gap-2">
+                            {isAdminMode && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedProjectIdx(null);
+                                }}
+                                className="bg-gold hover:bg-amber-400 text-navy-dark px-6 py-2.5 text-[10px] font-mono font-black uppercase tracking-widest rounded transition-all cursor-pointer"
+                              >
+                                บันทึก &amp; ปิด 💾
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setSelectedProjectIdx(null)}
+                              className="bg-white/10 hover:bg-white/20 text-white px-6 py-2.5 text-[10px] font-mono font-black uppercase tracking-widest rounded transition-all cursor-pointer"
+                            >
+                              ปิดหน้าต่าง ✖
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                );
+              })()}
+            </AnimatePresence>
 
             {isAdminMode && (
               <div className="mt-12 flex justify-center">
@@ -2252,6 +2956,26 @@ export default function App() {
                 </form>
               )}
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Saved Success Toast Notifications */}
+      <AnimatePresence>
+        {showSavedToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -50, scale: 0.9 }}
+            className="fixed top-24 left-1/2 -translate-x-1/2 z-[200] bg-emerald-950/95 text-emerald-300 border border-emerald-500/30 px-6 py-4 rounded-sm shadow-[0_20px_40px_rgba(0,0,0,0.5)] flex items-center gap-3 backdrop-blur-md"
+          >
+            <div className="w-5 h-5 rounded-full bg-emerald-500 text-navy-dark flex items-center justify-center font-bold text-xs shrink-0">
+              ✓
+            </div>
+            <div className="text-left">
+              <span className="block text-xs font-sans font-black tracking-wider uppercase text-white leading-none">บันทึกข้อมูลสำเร็จ!</span>
+              <span className="text-[10px] font-mono text-emerald-400 mt-1 block">รายละเอียดได้รับการจัดเก็บเข้าระบบเรียบร้อยแล้วค่ะ 💾</span>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
