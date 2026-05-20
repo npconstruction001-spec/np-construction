@@ -47,6 +47,9 @@ import imgTescoLotus from "./assets/images/regenerated_image_1779243353442.jpg";
 import imgCafeAmazon from "./assets/images/regenerated_image_1779243348101.jpg";
 import imgAirAndElec from "./assets/images/regenerated_image_1779243350161.jpg";
 import imgPowerPlant from "./assets/images/regenerated_image_1779243351642.jpg";
+import imgBannerLeft from "./assets/images/banner_left_engineers_uniform_1779252458151.png";
+import imgBannerRight from "./assets/images/banner_right_workers_uniform_1779252795939.png";
+import imgAbout from "./assets/images/regenerated_image_1779251887070.jpg";
 
 const NAV_LINKS = [
   { name: "หน้าแรก", href: "#home" },
@@ -437,7 +440,7 @@ export default function App() {
             <div className="absolute inset-0 z-0">
               {/* คุณสามารถเปลี่ยนรูปพื้นหลังได้ที่นี่ โดยใส่รูปในโฟลเดอร์ /public/images/ แล้วเปลี่ยน src เป็น "/images/your-photo.jpg" */}
               <img 
-                src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1920" 
+                src={imgBannerLeft} 
                 alt="Construction background" 
                 className="w-full h-full object-cover opacity-60"
                 referrerPolicy="no-referrer"
@@ -473,7 +476,7 @@ export default function App() {
 
           <div className="col-span-12 lg:col-span-5 relative hidden lg:block order-1 lg:order-2">
             <img 
-              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200" 
+              src={imgBannerRight} 
               alt="Engineering detail" 
               className="w-full h-full object-cover brightness-75 contrast-110"
               referrerPolicy="no-referrer"
@@ -498,7 +501,7 @@ export default function App() {
               >
                 <div className="relative z-10 overflow-hidden shadow-[30px_30px_0px_0px_rgba(15,23,42,1)] border border-navy-dark">
                   <img 
-                    src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800" 
+                    src={imgAbout} 
                     alt="Workplace" 
                     className="w-full h-auto hover:scale-105 transition-all duration-700"
                     referrerPolicy="no-referrer"
