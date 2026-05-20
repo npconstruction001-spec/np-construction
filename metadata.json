@@ -1,0 +1,6 @@
+{
+  "name": "NP Conduction - ก่อสร้างและงานระบบวิศวกรรม",
+  "description": "หจก. เอ็นพี คอนดักชั่น - มืออาชีพด้านรับเหมาก่อสร้าง งานระบบไฟฟ้า เครื่องกล และวิศวกรรมครบวงจร",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

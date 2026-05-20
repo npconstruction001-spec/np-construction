@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@300;400;500;600;700&family=Space+Grotesk:wght@300..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Sarabun", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-tech: "Chakra Petch", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --font-title: "Chakra Petch", sans-serif;
+  
+  --color-navy-dark: #0F172A;
+  --color-navy-light: #1E293B;
+  --color-gold: #C5A059;
+  --color-gold-hover: #B38F46;
+  --color-paper: #F8FAFC;
+}
+
+@layer base {
+  body {
+    @apply bg-paper text-slate-800 antialiased font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-tech font-bold tracking-tight uppercase;
+  }
+}
+
+.text-editorial-lg {
+  @apply font-display text-8xl font-black leading-[0.8] tracking-tighter;
+}
+
+.mono-label {
+  @apply font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400;
+}
+
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Custom editorial components */
+.label-small {
+  @apply font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-gold;
+}
+
+.gold-line {
+  @apply bg-gold h-1 w-20;
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-gold to-white;
+}
