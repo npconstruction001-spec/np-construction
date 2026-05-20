@@ -43,6 +43,70 @@ import {
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
+// --- IndexedDB for Persistent Video Upload Storage ---
+const NP_DB_NAME = "NP_Conduction_Videos_DB_v1";
+const NP_STORE_NAME = "local_videos";
+
+function openNPDatabase(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(NP_DB_NAME, 1);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(NP_STORE_NAME)) {
+        db.createObjectStore(NP_STORE_NAME);
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function saveVideoToIndexedDB(key: string, file: Blob): Promise<void> {
+  try {
+    const db = await openNPDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(NP_STORE_NAME, "readwrite");
+      const store = transaction.objectStore(NP_STORE_NAME);
+      const request = store.put(file, key);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error("Failed to save to IndexedDB", error);
+  }
+}
+
+async function getVideoFromIndexedDB(key: string): Promise<Blob | null> {
+  try {
+    const db = await openNPDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(NP_STORE_NAME, "readonly");
+      const store = transaction.objectStore(NP_STORE_NAME);
+      const request = store.get(key);
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error("Failed to get from IndexedDB", error);
+    return null;
+  }
+}
+
+async function removeVideoFromIndexedDB(key: string): Promise<void> {
+  try {
+    const db = await openNPDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(NP_STORE_NAME, "readwrite");
+      const store = transaction.objectStore(NP_STORE_NAME);
+      const request = store.delete(key);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error("Failed to delete from IndexedDB", error);
+  }
+}
+
 import imgTescoLotus from "./assets/images/regenerated_image_1779243353442.jpg";
 import imgCafeAmazon from "./assets/images/regenerated_image_1779243348101.jpg";
 import imgAirAndElec from "./assets/images/regenerated_image_1779243350161.jpg";
@@ -249,6 +313,7 @@ export default function App() {
   const [draftVideoSubtitle, setDraftVideoSubtitle] = useState(() => videoData.subtitle);
   const [draftVideoUrl, setDraftVideoUrl] = useState(() => videoData.videoUrl);
   const [draftVideoFileUrl, setDraftVideoFileUrl] = useState<string | null>(null);
+  const [draftVideoFileBlob, setDraftVideoFileBlob] = useState<Blob | null>(null);
   const [videoApplyStatus, setVideoApplyStatus] = useState<"idle" | "pending" | "success">("idle");
   const [videoListError, setVideoListError] = useState<string | null>(null);
 
@@ -256,10 +321,41 @@ export default function App() {
     setDraftVideoTitle(videoData.title);
     setDraftVideoSubtitle(videoData.subtitle);
     setDraftVideoUrl(videoData.videoUrl);
-    setTempVideoObjectUrl(null);
     setDraftVideoFileUrl(null);
+    setDraftVideoFileBlob(null);
     setVideoListError(null);
-  }, [activeVideoIdx]);
+  }, [activeVideoIdx, videoData]);
+
+  // Load Video Blob from IndexedDB dynamically when active video shifts, to ensure real PERSISTENCE across refreshes!
+  useEffect(() => {
+    let activeObjectUrl: string | null = null;
+    const currentVideo = videoPlaylists[activeVideoIdx];
+
+    if (currentVideo && currentVideo.videoUrl && currentVideo.videoUrl.startsWith("localdb://")) {
+      const key = currentVideo.videoUrl.replace("localdb://", "");
+      getVideoFromIndexedDB(key).then((blob) => {
+        if (blob) {
+          activeObjectUrl = URL.createObjectURL(blob);
+          setTempVideoObjectUrl(activeObjectUrl);
+        } else {
+          setTempVideoObjectUrl(null);
+        }
+      });
+    } else {
+      setTempVideoObjectUrl(null);
+    }
+
+    return () => {
+      if (activeObjectUrl) {
+        URL.revokeObjectURL(activeObjectUrl);
+      }
+    };
+  }, [activeVideoIdx, videoPlaylists]);
+
+  // Clean, safe reactive reference to target video URL for HTML5 <video> components
+  const effectiveVideoUrl = videoData.videoUrl && videoData.videoUrl.startsWith("localdb://")
+    ? (tempVideoObjectUrl || "")
+    : (videoData.videoUrl || "");
 
   useEffect(() => {
     localStorage.setItem("np_video_playlist_v3", JSON.stringify(videoPlaylists));
@@ -342,14 +438,14 @@ export default function App() {
         } border-b border-gold/20`}
       >
         <div className="max-w-7xl mx-auto px-10 flex justify-between items-center">
-          <div className="flex flex-col">
-            <span className="text-2xl font-black tracking-tighter text-gold leading-none font-tech">
+          <a href="#home" className="flex flex-col cursor-pointer group select-none">
+            <span className="text-2xl font-black tracking-tighter text-gold leading-none font-tech group-hover:text-amber-300 transition-colors duration-200">
               NP CONDUCTION
             </span>
-            <span className="mono-label mt-1">
+            <span className="mono-label mt-1 group-hover:text-white transition-colors duration-200">
               Limited Partnership
             </span>
-          </div>
+          </a>
 
           <nav className="hidden md:flex gap-10 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
             {NAV_LINKS.map((link) => (
@@ -1619,7 +1715,7 @@ export default function App() {
                 <div className={`${isAdminMode ? "w-full" : "col-span-1 lg:col-span-2"} aspect-video bg-navy-dark relative overflow-hidden border border-navy-dark shadow-2xl group rounded-sm`}>
                   {isVideoPlaying ? (
                     <video 
-                      src={tempVideoObjectUrl || videoData.videoUrl} 
+                      src={effectiveVideoUrl} 
                       controls 
                       autoPlay 
                       className="w-full h-full object-cover z-10 relative"
@@ -1663,7 +1759,7 @@ export default function App() {
                   )}
                   {/* Realtime ambient background */}
                   <video 
-                    src={tempVideoObjectUrl || videoData.videoUrl} 
+                    src={effectiveVideoUrl} 
                     muted 
                     loop 
                     className="absolute inset-0 w-full h-full object-cover opacity-20 blur-sm scale-110" 
@@ -1767,6 +1863,7 @@ export default function App() {
                                   if (file) {
                                     const url = URL.createObjectURL(file);
                                     setDraftVideoFileUrl(url);
+                                    setDraftVideoFileBlob(file);
                                     setDraftVideoUrl(""); // clear URL text when using a local file
                                   }
                                 }}
@@ -1786,13 +1883,24 @@ export default function App() {
                               type="button"
                               onClick={() => {
                                 setVideoApplyStatus("pending");
-                                setTimeout(() => {
-                                  setTempVideoObjectUrl(draftVideoFileUrl);
+                                setTimeout(async () => {
+                                  let targetVideoUrl = draftVideoUrl;
+                                  const key = `video_file_${activeVideoIdx}`;
+
+                                  if (draftVideoFileBlob) {
+                                    // Save binary content to IndexedDB for REAL persistence across page loads and compilations
+                                    await saveVideoToIndexedDB(key, draftVideoFileBlob);
+                                    targetVideoUrl = `localdb://${key}`;
+                                  } else {
+                                    // If no local file is selected, remove any stored IndexedDB files for this slot
+                                    await removeVideoFromIndexedDB(key);
+                                  }
+
                                   const updated = [...videoPlaylists];
                                   updated[activeVideoIdx] = {
                                     title: draftVideoTitle,
                                     subtitle: draftVideoSubtitle,
-                                    videoUrl: draftVideoFileUrl || draftVideoUrl
+                                    videoUrl: targetVideoUrl
                                   };
                                   setVideoPlaylists(updated);
                                   localStorage.setItem("np_video_playlist_v3", JSON.stringify(updated));
