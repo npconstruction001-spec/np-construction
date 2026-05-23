@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   Video, 
   Play, 
+  Pause,
   Edit3, 
   Sparkles, 
   Link, 
   UploadCloud, 
   CheckCircle2, 
-  RotateCcw 
+  RotateCcw,
+  Eye,
+  Volume2,
+  VolumeX,
+  Tv
 } from "lucide-react";
 import { VideoItem } from "../types";
 import { 
@@ -36,6 +41,15 @@ export default function VideoSection({
   const [activeVideoIdx, setActiveVideoIdx] = useState<number>(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false);
   const [tempVideoObjectUrl, setTempVideoObjectUrl] = useState<string | null>(null);
+  const [isMuted, setIsMuted] = useState<boolean>(true);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  // Observer State to show user that the portal is actively tracking their gaze
+  const [isInViewport, setIsInViewport] = useState<boolean>(false);
+
+  // Refs
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Draft states matching full form fields
   const [draftVideoTitle, setDraftVideoTitle] = useState<string>("");
@@ -66,7 +80,6 @@ export default function VideoSection({
       const key = current.videoUrl.replace("localdb://", "");
       getVideoFromIndexedDB(key).then((blob) => {
         if (blob && active) {
-          // Release previous object URLs from memory
           if (tempVideoObjectUrl) {
             URL.revokeObjectURL(tempVideoObjectUrl);
           }
@@ -109,6 +122,65 @@ export default function VideoSection({
 
   const gDriveEmbedUrl = getGoogleDriveEmbedUrl(effectiveVideoUrl);
 
+  // Intersection Observer Autoplay logic
+  useEffect(() => {
+    if (!videoRef.current || gDriveEmbedUrl) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInViewport(entry.isIntersecting);
+        if (videoRef.current) {
+          if (entry.isIntersecting) {
+            // Under normal browser rules, autoplay with sound is blocked. Muting is required.
+            videoRef.current.play()
+              .then(() => {
+                setIsVideoPlaying(true);
+              })
+              .catch((err) => {
+                console.log("Auto-playing interrupted or blocked: ", err);
+                setIsVideoPlaying(false);
+              });
+          } else {
+            videoRef.current.pause();
+            setIsVideoPlaying(false);
+          }
+        }
+      },
+      {
+        threshold: 0.25, // Play when at least 25% of the frame is visible
+        rootMargin: "0px 0px -50px 0px"
+      }
+    );
+
+    observer.observe(videoRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [effectiveVideoUrl, gDriveEmbedUrl]);
+
+  // Manual Toggle Play/Pause
+  const handleTogglePlay = () => {
+    if (!videoRef.current) return;
+    if (isVideoPlaying) {
+      videoRef.current.pause();
+      setIsVideoPlaying(false);
+    } else {
+      videoRef.current.play()
+        .then(() => setIsVideoPlaying(true))
+        .catch((err) => console.log(err));
+    }
+  };
+
+  // Manual Toggle Sound Mute
+  const handleToggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    const nextMute = !isMuted;
+    videoRef.current.muted = nextMute;
+    setIsMuted(nextMute);
+  };
+
   const handleApplyVideoConfig = () => {
     setVideoApplyStatus("pending");
     setTimeout(async () => {
@@ -116,14 +188,11 @@ export default function VideoSection({
       const key = `video_file_${activeVideoIdx}`;
 
       if (draftVideoFileBlob) {
-        // Save binary content to IndexedDB for REAL persistence across page loads and compilations
         await saveVideoToIndexedDB(key, draftVideoFileBlob);
         targetVideoUrl = `localdb://${key}`;
       } else if (!draftVideoUrl) {
-        // If no URL is provided and no local file has been selected, fallback
         targetVideoUrl = activeVideo.videoUrl;
       } else {
-        // If a direct URL text is entered, remove any residual local database file for this slot
         await removeVideoFromIndexedDB(key);
       }
 
@@ -135,7 +204,7 @@ export default function VideoSection({
       };
       setVideoPlaylists(updated);
       localStorage.setItem("np_video_playlist_v3", JSON.stringify(updated));
-      setIsVideoPlaying(true); // Auto-play the newly updated track
+      setIsVideoPlaying(true); 
       setVideoApplyStatus("success");
       triggerSavedToast();
       setTimeout(() => setVideoApplyStatus("idle"), 2500);
@@ -145,9 +214,9 @@ export default function VideoSection({
   const handleResetVideoToCorporate = () => {
     const defaultVideos = [
       {
-        title: "งานระะบบ Facade",
-        subtitle: "ขั้นตอนการทำงาน",
-        videoUrl: "https://drive.google.com/file/d/12EhuHkgHPf5l-14avPTvwj6YPSVXMHUK/view?usp=drive_link"
+        title: "THE ENGINEERING JOURNEY",
+        subtitle: "Corporate Video Showcase",
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-construction-worker-at-a-site-working-with-concrete-41584-large.mp4"
       },
       {
         title: "งานติดตั้งและเดินระบบไฟฟ้าตู้ควบคุม MDB",
@@ -168,148 +237,225 @@ export default function VideoSection({
   };
 
   return (
-    <div className="mt-32">
-      <div className="flex items-center gap-4 mb-12">
+    <div className="mt-8 mb-4 font-sans" id="cinematic" ref={containerRef}>
+      {/* Decorative Branding Line */}
+      <div className="flex items-center gap-4 mb-8">
         <div className="h-px flex-1 bg-slate-200"></div>
-        <span className="label-small font-tech text-gold tracking-widest flex items-center gap-2">
-          <Video size={14} /> Video Showcase
+        <span className="label-small font-sans text-gold tracking-widest flex items-center gap-2 text-xs font-bold uppercase">
+          <Tv size={14} className="text-gold" /> CINEMATIC LIVE CONDUCTION
         </span>
         <div className="h-px flex-1 bg-slate-200"></div>
       </div>
       
-      <div className={isAdminMode ? "flex flex-col gap-6 max-w-4xl mx-auto" : "grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch"}>
-        {/* Video Player Display */}
-        <div className={`${isAdminMode ? "w-full" : "col-span-1 lg:col-span-2"} aspect-video bg-navy-dark relative overflow-hidden border border-navy-dark shadow-2xl group rounded-sm`}>
-          {isVideoPlaying ? (
-            gDriveEmbedUrl ? (
+      {/* Redesigned Minimal & Premium Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        
+        {/* BIG AUTOMATIC CINEMA screen */}
+        <div 
+          className="lg:col-span-8 bg-black relative overflow-hidden border border-slate-900 shadow-2xl rounded-sm group flex flex-col justify-between"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          id="autoplaying-player-card"
+        >
+          {/* Top Info HUD Bar overlay */}
+          <div className="absolute top-0 inset-x-0 bg-gradient-to-b from-black/85 via-black/50 to-transparent p-6 z-20 flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <span className={`w-2.5 h-2.5 rounded-full ${isVideoPlaying ? "bg-emerald-500 animate-ping" : "bg-gold"} flex-shrink-0`}></span>
+              <div>
+                <span className="text-[10px] uppercase tracking-wider font-mono text-gold font-bold block">
+                  {activeVideo.subtitle || "LIVE SITE FOOTAGE"}
+                </span>
+                <h3 className="text-sm font-bold text-white tracking-tight -mt-0.5 line-clamp-1 uppercase">
+                  {activeVideo.title}
+                </h3>
+              </div>
+            </div>
+
+            {/* Live Autoplay status badge */}
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] bg-navy-dark/95 text-slate-300 px-3 py-1.5 rounded-full border border-white/10 font-mono font-bold flex items-center gap-1.5 tracking-tight shadow-md">
+                <Eye size={10} className="text-gold animate-pulse" />
+                {isInViewport ? (
+                  <span className="text-emerald-400">กำลังเล่นอัตโนมัติ (AUTOPLAYING)</span>
+                ) : (
+                  <span>รอคุณมองเพื่อเล่น (STANDBY)</span>
+                )}
+              </span>
+            </div>
+          </div>
+
+          {/* Interactive Core Video Tag */}
+          <div className="relative w-full h-full min-h-[340px] md:min-h-[480px] flex items-center justify-center bg-slate-950">
+            {gDriveEmbedUrl ? (
               <iframe 
                 src={gDriveEmbedUrl}
-                className="w-full h-full z-10 relative border-0"
+                className="absolute inset-0 w-full h-full z-10 border-0"
                 allow="autoplay; encrypted-media"
                 allowFullScreen
                 title="Google Drive Video Player"
               />
             ) : (
               <video 
+                ref={videoRef}
                 src={effectiveVideoUrl} 
-                controls 
-                autoPlay 
-                className="w-full h-full object-cover z-10 relative"
+                className="absolute inset-0 w-full h-full object-cover z-10"
+                loop
+                muted={isMuted}
+                playsInline
+                onClick={handleTogglePlay}
                 onError={() => {
-                  console.error("Video load error");
-                  setIsVideoPlaying(false);
+                  console.error("Video failed to play automatically");
                 }}
               />
-            )
-          ) : (
+            )}
+
+            {/* Glowing Backdrop Canvas Ambient blur (behind the clean panel) */}
+            {!gDriveEmbedUrl && (
+              <video 
+                src={effectiveVideoUrl} 
+                muted 
+                loop 
+                className="absolute inset-0 w-full h-full object-cover opacity-15 blur-2xl scale-125 pointer-events-none" 
+              />
+            )}
+
+            {/* Centered Controls Overlay appearing on hover or when paused */}
             <div 
-              onClick={() => setIsVideoPlaying(true)}
-              className="absolute inset-0 cursor-pointer z-10 flex flex-col justify-between p-10 h-full"
+              onClick={handleTogglePlay}
+              className={`absolute inset-0 z-20 bg-black/35 cursor-pointer flex items-center justify-center transition-opacity duration-300 ${
+                !isVideoPlaying || isHovered ? "opacity-100" : "opacity-0"
+              }`}
             >
-              {/* Decorative top row */}
-              <div className="flex justify-between items-start">
-                <span className="mono-label text-gold font-mono bg-navy-dark/70 px-3 py-1.5 border border-gold/20 rounded-sm font-tech">
-                  {activeVideo.subtitle || "DEFAULT Corporate Video"}
-                </span>
-                <span className="text-[10px] text-white/50 bg-navy-dark/60 border border-white/10 px-2 py-1 rounded">
-                  Click to Play 🎬
+              <div className="flex flex-col items-center gap-3">
+                <button
+                  type="button"
+                  className="w-16 h-16 rounded-full bg-gold hover:bg-white text-navy-dark flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer"
+                >
+                  {isVideoPlaying ? (
+                    <Pause size={24} className="fill-current text-navy-dark ml-0" />
+                  ) : (
+                    <Play size={24} className="fill-current text-navy-dark ml-1" />
+                  )}
+                </button>
+                <span className="text-[10px] text-white/90 bg-navy-dark/80 px-3 py-1 rounded font-sans tracking-wide border border-white/10 shadow">
+                  {isVideoPlaying ? "กดเพื่อค้างวีดีโอไว้ (Pause Video)" : "กดเพื่อเล่นต่ออีกครั้ง (Play Video)"}
                 </span>
               </div>
+            </div>
 
-              {/* Play Button - Centered */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-24 h-24 rounded-full border border-gold flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-[0_0_50px_rgba(197,160,89,0.4)] bg-navy-dark/60 backdrop-blur-sm group-hover:bg-gold group-hover:border-navy-dark">
-                  <Play size={32} className="text-gold group-hover:text-navy-dark ml-1.5 fill-current" />
+            {/* Quick action controls at the bottom-right for manual toggling */}
+            {!gDriveEmbedUrl && (
+              <div className="absolute bottom-6 right-6 z-35 flex items-center gap-2">
+                <button
+                  onClick={handleToggleMute}
+                  className="bg-navy-dark/95 hover:bg-gold hover:text-navy-dark text-slate-300 p-2.5 rounded-sm border border-white/10 shadow-lg transition-all flex items-center justify-center cursor-pointer"
+                  title={isMuted ? "เปิดเสียง" : "ปิดเสียง"}
+                >
+                  {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} className="animate-bounce" />}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Foot Info Label Panel */}
+          <div className="bg-navy-dark p-6 z-20 border-t border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <p className="text-xs text-slate-400 font-sans leading-relaxed max-w-lg">
+              🎥 <strong className="text-slate-200">วีดีโอนี้จะหยุดทำงานโดยอัตโนมัติเมื่อเลื่อนผ่าน</strong> เพื่อลดการใช้งานอินเทอร์เน็ตของเครื่อง และจะกลับมาโหลดภาพเคลื่อนไหวสดทันทีเมื่อท่านเลื่อนหน้าจอกลับเข้ามาชม
+            </p>
+            {isLoggedIn && !isAdminMode && (
+              <button
+                type="button"
+                onClick={() => setIsAdminMode(true)}
+                className="bg-navy-light text-gold hover:bg-gold hover:text-navy-dark px-4 py-2 border border-gold/30 rounded-sm text-xs font-bold transition-all flex items-center gap-1.5 self-stretch md:self-auto justify-center cursor-pointer"
+              >
+                <Edit3 size={13} />
+                จัดการไฟล์วิดีโอ ⚙️
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Dynamic Selector Options Bar & Mini Showcase */}
+        <div className={`lg:col-span-4 flex flex-col justify-between ${isAdminMode ? "border-2 border-dashed border-gold p-6 bg-slate-50" : "bg-slate-50 border border-slate-250 p-6"} rounded-sm`}>
+          
+          {/* Normal Mode List Selectors */}
+          {!isAdminMode ? (
+            <div className="h-full flex flex-col justify-between">
+              <div className="space-y-6">
+                <span className="text-[10px] font-mono select-none px-2.5 py-1 text-slate-500 bg-slate-200 uppercase font-black rounded-sm border border-slate-300 inline-block">
+                  CINEMATIC STREAM ({videoPlaylists.length})
+                </span>
+                
+                <div>
+                  <h4 className="text-lg font-black text-navy-dark leading-snug tracking-tight font-sans uppercase">
+                    โครงการและระบบปฏิบัติงานจริง
+                  </h4>
+                  <p className="text-xs text-slate-500 mt-2 font-sans font-light leading-relaxed">
+                    วิดีโอถูกปรับระบบให้เล่นโดยอัตโนมัติแบบไร้เสียง (Muted Autoplay) ตามนโยบายความสะดวกของเบราว์เซอร์สากล ท่านสามารถคลิกเพื่อเลือกวิดีโอชิ้นอื่นๆ ที่ต้องการรับชมได้ทันทีด้านล่างนี้
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block font-sans">
+                    เลือกรายการวิดีโอหลัก (คลิกเพื่อเปลี่ยน):
+                  </span>
+                  
+                  <div className="flex flex-col gap-2">
+                    {videoPlaylists.map((vItem, vIdx) => (
+                      <button
+                        key={vIdx}
+                        onClick={() => {
+                          setActiveVideoIdx(vIdx);
+                          if (videoRef.current) {
+                            videoRef.current.currentTime = 0;
+                          }
+                        }}
+                        className={`w-full text-left p-3.5 border rounded-sm transition-all flex items-start gap-3 cursor-pointer ${
+                          activeVideoIdx === vIdx
+                            ? "bg-navy-dark border-navy-dark text-white shadow-md shadow-navy-dark/15"
+                            : "bg-white border-slate-200 text-slate-600 hover:border-navy-dark hover:bg-slate-50"
+                        }`}
+                      >
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                          activeVideoIdx === vIdx ? "bg-gold text-navy-dark" : "bg-slate-100 text-slate-500"
+                        }`}>
+                          {vIdx + 1}
+                        </span>
+                        <div className="flex-1">
+                          <span className={`text-[9px] uppercase font-bold block ${activeVideoIdx === vIdx ? "text-gold" : "text-slate-400"}`}>
+                            {vItem.subtitle}
+                          </span>
+                          <span className="text-xs font-bold block leading-snug mt-0.5 line-clamp-1">
+                            {vItem.title}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Bottom Info details */}
-              <div className="z-10 bg-gradient-to-t from-navy-dark/90 to-transparent p-4 -mx-10 -mb-10 pt-16">
-                <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase font-tech">
-                  {activeVideo.title || "THE ENGINEERING JOURNEY"}
-                </h3>
-                <p className="text-xs text-slate-300 mt-1 font-sans">คลิกเพื่อรับชมวิดีโอแนะนำ หจก. เอ็นพี คอนดักชั่น</p>
-              </div>
-
-              <div className="absolute inset-0 bg-navy-dark/30 z-0 animate-fade"></div>
-            </div>
-          )}
-          {/* Realtime ambient background */}
-          {!gDriveEmbedUrl && (
-            <video 
-              src={effectiveVideoUrl} 
-              muted 
-              loop 
-              className="absolute inset-0 w-full h-full object-cover opacity-20 blur-sm scale-110" 
-            />
-          )}
-        </div>
-
-        {/* Video Info Display or Admin Editor Sidebar */}
-        <div className={`bg-slate-50 border border-slate-200 p-8 rounded-sm ${isAdminMode ? "w-full" : "flex flex-col justify-between"}`}>
-          {!isAdminMode ? (
-            <div className="space-y-6 flex flex-col justify-between h-full">
-              <div className="space-y-4">
-                <span className="text-[10px] font-mono select-none px-2.5 py-1 text-slate-500 bg-slate-200/60 uppercase font-black rounded-sm border border-slate-300/50 inline-block font-tech">
-                  Corporate Media
-                </span>
-                <h4 className="text-xl font-black text-navy-dark leading-snug tracking-tight font-tech uppercase">
-                  {activeVideo.title || "THE ENGINEERING JOURNEY"}
-                </h4>
-                <p className="text-sm text-slate-500 font-light leading-relaxed font-sans">
-                  รับชมวิดีโอพรีเซนเทชั่นและบันทึกภาพถ่ายจากการทำงานจริง ณ ทิวทัศน์สถานที่ติดตั้งของแต่ละโครงการ 
-                  สะท้อนฝีมือความประณีตและการคุมเข้มความปลอดภัยทางวิศวกรรม
-                </p>
-                
-                {/* Selector Tab Pills */}
-                {videoPlaylists.length > 1 && (
-                  <div className="pt-2 flex flex-col gap-1.5">
-                    <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block font-sans">วิดีโอเพลย์ลิสต์ ({videoPlaylists.length})</span>
-                    <div className="flex flex-wrap gap-2">
-                      {videoPlaylists.map((vItem, vIdx) => (
-                        <button
-                          key={vIdx}
-                          onClick={() => {
-                            setActiveVideoIdx(vIdx);
-                            setIsVideoPlaying(false);
-                          }}
-                          className={`px-3 py-1.5 text-[10px] font-sans font-bold border rounded transition-all cursor-pointer ${
-                            activeVideoIdx === vIdx
-                              ? "bg-navy-dark border-navy-dark text-white shadow-sm"
-                              : "bg-white border-slate-300 text-slate-600 hover:border-navy-dark"
-                          }`}
-                        >
-                          📼 ตอนที่ {vIdx + 1}: {vItem.title.substring(0, 15)}...
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              
               {isLoggedIn && (
-                <div className="border-t border-slate-200 pt-6 space-y-3">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block font-sans">เปิดโหมดผู้ดูแลเพื่อแก้ไข</span>
+                <div className="border-t border-slate-200 pt-6 mt-6">
                   <button
-                    onClick={() => {
-                      setIsAdminMode(true);
-                    }}
+                    onClick={() => setIsAdminMode(true)}
                     className="w-full bg-navy-dark hover:bg-gold text-white hover:text-navy-dark py-3.5 text-xs font-bold uppercase tracking-widest rounded-sm transition-all flex items-center justify-center gap-2 border border-navy-dark hover:border-gold cursor-pointer"
                   >
                     <Edit3 size={14} />
-                    แก้ไขวิดีโอนี้ 🎥
+                    สลับโหมดดึงวิดีโอขึ้นใหม่ 🎥
                   </button>
                 </div>
               )}
             </div>
           ) : (
-            <div className="space-y-5 flex flex-col justify-between h-full">
+            /* Admin Mode forms for editing and customizing videos */
+            <div className="space-y-4 flex flex-col justify-between h-full">
               <div className="space-y-4">
-                <span className="text-xs font-bold text-gold font-mono bg-navy-dark px-3 py-1.5 border border-gold/30 rounded-sm flex items-center gap-1.5 w-fit font-tech">
-                  <Sparkles size={12} /> แก้ไขข้อมูลวิดีโอพรีเซนเทชั่น (สไลด์ #{activeVideoIdx + 1})
+                <span className="text-xs font-bold text-gold font-sans bg-navy-dark px-3 py-1.5 border border-gold/30 rounded-sm flex items-center gap-1.5 w-fit">
+                  <Sparkles size={12} /> ปรับวิดีโอระบบ Autoplay (สไลด์ #{activeVideoIdx + 1})
                 </span>
 
-                {/* Playlist Slidselector within Editor */}
+                {/* Slots selectors inside the control column */}
                 <div className="flex gap-2 py-1">
                   {videoPlaylists.map((_, pIdx) => (
                     <button
@@ -360,7 +506,7 @@ export default function VideoSection({
                       type="text"
                       value={draftVideoUrl}
                       onChange={(e) => {
-                        setDraftVideoFileUrl(null); // Overwrite local file selection
+                        setDraftVideoFileUrl(null); 
                         setDraftVideoFileBlob(null);
                         setDraftVideoUrl(e.target.value);
                       }}
@@ -373,11 +519,11 @@ export default function VideoSection({
                 {/* File Upload Selector */}
                 <div className="bg-slate-200/50 p-4 border border-slate-300/40 rounded-sm space-y-2">
                   <label className="text-[10px] uppercase font-bold text-slate-500 block font-sans">
-                    หรือเลือกไฟล์วิดีโอจากเครื่องมือถือ/คอมฯ ของคุณ:
+                    หรืออัปโหลดจากเครื่องของคุณ:
                   </label>
                   <div className="flex items-center gap-3">
-                    <label className="cursor-pointer bg-navy-dark text-white hover:bg-gold hover:text-navy-dark font-mono text-[10px] font-black uppercase tracking-wider py-2.5 px-4 rounded-sm transition-all flex items-center justify-center gap-2 border border-navy-dark shadow">
-                      <UploadCloud size={14} /> เลือกวิดีโอ 📂
+                    <label className="cursor-pointer bg-navy-dark text-white hover:bg-gold hover:text-navy-dark font-sans text-[10px] font-black uppercase tracking-wider py-2 px-3 rounded-sm transition-all flex items-center justify-center gap-2 border border-navy-dark shadow">
+                      <UploadCloud size={14} /> เลือกไฟล์วิดีโอ 📂
                       <input
                         type="file"
                         accept="video/*"
@@ -388,35 +534,31 @@ export default function VideoSection({
                             const url = URL.createObjectURL(file);
                             setDraftVideoFileUrl(url);
                             setDraftVideoFileBlob(file);
-                            setDraftVideoUrl(""); // clear URL text when using a local file
+                            setDraftVideoUrl(""); 
                           }
                         }}
                       />
                     </label>
-                    {draftVideoFileUrl ? (
-                      <span className="text-[9px] text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded font-sans">โหลดไฟล์พร้อมยืนยันแล้ว</span>
-                    ) : null}
+                    {draftVideoFileUrl && (
+                      <span className="text-[8px] text-emerald-600 bg-emerald-50 border border-emerald-200 px-1 py-0.5 rounded font-sans">ยืนยันแล้ว</span>
+                    )}
                   </div>
-                  <p className="text-[9px] text-slate-400 font-sans tracking-tight">
-                    แนะนำให้อัปโหลดวิดีโอสั้น หรือไฟล์ที่มีขนาดไม่เกิน 20-30MB เพื่อประสิทธิภาพสูงสุด
-                  </p>
 
-                  {/* Explicit Video Confirm/Apply Button */}
                   <div className="pt-2 border-t border-slate-300/40 mt-3">
                     <button
                       type="button"
                       onClick={handleApplyVideoConfig}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-[11px] font-bold uppercase tracking-wider py-3 px-4 rounded-sm transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-[10px] font-bold uppercase tracking-wider py-2.5 px-4 rounded-sm transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                     >
                       {videoApplyStatus === "pending" ? (
-                        <span className="animate-pulse">กำลังสลับสายไฟสัญญาณวิดีโอ... ⚡</span>
+                        <span className="animate-pulse">กำลังบันทึกวิดีโอ... ⚡</span>
                       ) : videoApplyStatus === "success" ? (
-                        <span className="flex items-center gap-1.5 text-white font-sans">
-                          <CheckCircle2 size={13} className="animate-bounce" /> ยืนยันใส่วิดีโอสำเร็จเรียบร้อย! 🎬
+                        <span className="flex items-center gap-1 text-white font-sans">
+                          <CheckCircle2 size={12} className="animate-bounce" /> ดึงไฟล์วิดีโอลงระบบสำเร็จ! 🎬
                         </span>
                       ) : (
-                        <span className="flex items-center gap-1.5 font-sans">
-                          <CheckCircle2 size={13} /> ยืนยันเพื่อบันทึกและใส่วิดีโอใหม่นี้ 📝
+                        <span className="flex items-center gap-1 font-sans">
+                          <CheckCircle2 size={12} /> บันทึกและดึงไฟล์เข้ารถไฟแอป 📝
                         </span>
                       )}
                     </button>
@@ -424,44 +566,46 @@ export default function VideoSection({
                 </div>
               </div>
 
+              {/* Action columns inside drawer bar */}
               <div className="flex flex-col gap-2 border-t border-slate-200 pt-4">
                 {confirmResetVideo ? (
-                  <div className="flex items-center justify-between gap-1.5 border border-red-200 bg-red-50 p-1.5 rounded-sm">
-                    <span className="text-[10px] text-red-600 font-bold px-1 font-sans">ยืนยันรีเซ็ตค่าหลักของบริษัท?</span>
+                  <div className="flex items-center justify-between gap-1 border border-red-200 bg-red-50 p-1.5 rounded-sm">
+                    <span className="text-[9px] text-red-600 font-bold font-sans">ถอดข้อมูลกู้คืนของบริษัท?</span>
                     <div className="flex gap-1.5">
                       <button
                         onClick={handleResetVideoToCorporate}
-                        className="bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2 py-1 rounded transition-all cursor-pointer font-sans"
+                        className="bg-red-600 hover:bg-red-700 text-white text-[9px] font-bold px-2 py-1 rounded transition-all cursor-pointer font-sans"
                       >
-                        ยืนยัน
+                        ถอดด่วน
                       </button>
                       <button
                         onClick={() => setConfirmResetVideo(false)}
-                        className="bg-slate-200 hover:bg-slate-300 text-slate-600 text-[10px] font-bold px-2 py-1 rounded transition-all cursor-pointer font-sans"
+                        className="bg-slate-200 hover:bg-slate-300 text-slate-600 text-[9px] font-bold px-2 py-1 rounded transition-all cursor-pointer font-sans"
                       >
-                        ยกเลิก
+                        เลิก
                       </button>
                     </div>
                   </div>
                 ) : (
                   <button
                     onClick={() => setConfirmResetVideo(true)}
-                    className="w-full bg-white hover:bg-slate-100 text-slate-600 border border-slate-300 text-[10px] font-bold uppercase tracking-wider py-2.5 rounded-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer font-sans font-tech"
+                    className="w-full bg-white hover:bg-slate-100 text-slate-600 border border-slate-300 text-[9px] font-bold uppercase tracking-wider py-2 rounded-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer font-sans"
                   >
-                    <RotateCcw size={12} /> ปรับวิดีโอกลับเป็นของบริษัทหลัก 🔄
+                    <RotateCcw size={12} /> ถอนการจำลองเป็นโรงงานดั้งเดิม 🔄
                   </button>
                 )}
                 
                 <button
                   onClick={() => setIsAdminMode(false)}
-                  className="w-full bg-gold hover:bg-gold-hover text-navy-dark text-[10px] font-bold uppercase tracking-wider py-2.5 rounded-sm transition-all flex items-center justify-center gap-1.5 shadow-md border border-gold cursor-pointer font-sans font-tech"
+                  className="w-full bg-gold hover:bg-gold-hover text-navy-dark text-[10px] font-bold uppercase tracking-wider py-2 rounded-sm transition-all flex items-center justify-center gap-1.5 shadow-md border border-gold cursor-pointer font-sans"
                 >
-                  <CheckCircle2 size={12} /> ยืนยันปิดหน้าต่างแก้ไขทั้งหมด
+                  <CheckCircle2 size={12} /> ยืนยันเรียบร้อยและปิดหน้าตั้งค่า
                 </button>
               </div>
             </div>
           )}
         </div>
+
       </div>
     </div>
   );

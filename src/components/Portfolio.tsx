@@ -526,7 +526,7 @@ export default function Portfolio({
                   triggerSavedToast();
                 }
               }}
-              className="bg-red-900/10 border border-red-550/25 hover:bg-red-950 hover:border-red-500 text-red-500 hover:text-white px-8 py-4.5 text-xs font-bold uppercase tracking-widest rounded transition-all flex items-center gap-2 shadow-2xl cursor-pointer border-solid"
+              className="bg-red-900/10 border border-red-500/25 hover:bg-red-950 hover:border-red-500 text-red-500 hover:text-white px-8 py-4.5 text-xs font-bold uppercase tracking-widest rounded transition-all flex items-center gap-2 shadow-2xl cursor-pointer border-solid"
               title="กู้คืนข้อมูลหน้าผลงานเริ่มต้นจากไฟล์ระบบเพื่อแก้ปัญหางานหาย"
             >
               <RotateCcw size={16} /> RESTORE DEFAULTS (กู้คืนผลงานดั้งเดิม)
