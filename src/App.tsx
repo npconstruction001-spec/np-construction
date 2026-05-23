@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, Lock, Unlock, ShieldCheck } from "lucide-react";
-import { Service, Project, VideoItem } from "./types";
+import { Service, Project } from "./types";
 import { 
   SERVICES, 
   PORTFOLIO, 
@@ -16,7 +16,6 @@ import Stats from "./components/Stats";
 import Estimator from "./components/Estimator";
 import Timeline from "./components/Timeline";
 import PortfolioSection from "./components/Portfolio";
-import VideoSection from "./components/VideoSection";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
@@ -93,23 +92,6 @@ export default function App() {
   const [portfolio, setPortfolio] = useState<Project[]>(() => {
     const saved = localStorage.getItem("np_portfolio_data");
     return saved ? JSON.parse(saved) : PORTFOLIO;
-  });
-
-  const [videoPlaylists, setVideoPlaylists] = useState<VideoItem[]>(() => {
-    const saved = localStorage.getItem("np_video_playlist_v3");
-    const defaultVideos = [
-      {
-        title: "THE ENGINEERING JOURNEY",
-        subtitle: "Corporate Video Showcase",
-        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-construction-worker-at-a-site-working-with-concrete-41584-large.mp4"
-      },
-      {
-        title: "งานติดตั้งและเดินระบบไฟฟ้าตู้ควบคุม MDB",
-        subtitle: "MDB Substation Showcase Video",
-        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-welder-working-on-a-pipeline-42614-large.mp4"
-      }
-    ];
-    return saved ? JSON.parse(saved) : defaultVideos;
   });
 
   // Track Window Scroll to dynamically style Header
@@ -256,14 +238,6 @@ export default function App() {
         {/* Hero Landing */}
         <Hero 
           isAdminMode={isAdminMode}
-          heroTitleL1={heroTitleL1}
-          setHeroTitleL1={setHeroTitleL1}
-          heroTitleL2={heroTitleL2}
-          setHeroTitleL2={setHeroTitleL2}
-          heroTitleGold={heroTitleGold}
-          setHeroTitleGold={setHeroTitleGold}
-          heroSubtitle={heroSubtitle}
-          setHeroSubtitle={setHeroSubtitle}
           triggerSavedToast={triggerSavedToast}
           setIsAdminMode={setIsAdminMode}
         />
@@ -315,17 +289,7 @@ export default function App() {
           triggerSavedToast={triggerSavedToast}
         />
 
-        {/* Media Showcase Section */}
-        <div className="max-w-7xl mx-auto px-6 pb-24">
-          <VideoSection 
-            isLoggedIn={isLoggedIn}
-            isAdminMode={isAdminMode}
-            setIsAdminMode={setIsAdminMode}
-            videoPlaylists={videoPlaylists}
-            setVideoPlaylists={setVideoPlaylists}
-            triggerSavedToast={triggerSavedToast}
-          />
-        </div>
+
 
         {/* Contact form and Simulator Integrations */}
         <Contact />
