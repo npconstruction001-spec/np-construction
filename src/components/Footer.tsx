@@ -1,7 +1,11 @@
 import React from "react";
 import { NAV_LINKS } from "../constants/data";
 
-export default function Footer() {
+interface FooterProps {
+  onSecretClick?: () => void;
+}
+
+export default function Footer({ onSecretClick }: FooterProps) {
   return (
     <footer className="bg-white text-navy-dark pt-32 pb-10 border-t border-slate-100">
       <div className="max-w-7xl mx-auto px-6">
@@ -44,7 +48,11 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-slate-100 pt-10 flex flex-col md:flex-row justify-between items-center gap-10">
-          <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-400">
+          <p 
+            onClick={onSecretClick}
+            className="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-400 cursor-pointer select-none active:text-gold transition-colors duration-150"
+            title="NP Security System"
+          >
             © {new Date().getFullYear()} NP Conduction Limited Partnership.
           </p>
           <div className="flex gap-10 text-[10px] uppercase font-bold tracking-[0.2em] text-slate-400">

@@ -120,6 +120,41 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Secret URL parameters check to easily toggle admin editor
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const secretAction = params.get("edit") || params.get("admin") || params.get("np_edit");
+      if (secretAction === "true") {
+        localStorage.setItem("np_admin_is_logged_in", "true");
+        setIsLoggedIn(true);
+        setIsAdminMode(true);
+        triggerSavedToast();
+      } else if (secretAction === "false") {
+        localStorage.removeItem("np_admin_is_logged_in");
+        localStorage.removeItem("np_admin_email");
+        setIsLoggedIn(false);
+        setIsAdminMode(false);
+        triggerSavedToast();
+      }
+    }
+  }, []);
+
+  const [secretClickCount, setSecretClickCount] = useState<number>(0);
+  const handleSecretClick = () => {
+    setSecretClickCount((prev) => {
+      const next = prev + 1;
+      if (next >= 5) {
+        setAuthError(null);
+        setAuthEmail("");
+        setAuthPassword("");
+        setShowAuthModal(true);
+        return 0;
+      }
+      return next;
+    });
+  };
+
   // Sync edits automatically as they are entered (Offline First Persistence)
   useEffect(() => {
     localStorage.setItem("np_hero_title_l1", heroTitleL1);
@@ -213,6 +248,7 @@ export default function App() {
         setIsMenuOpen={setIsMenuOpen}
         handleLogout={handleLogout}
         handleToggleAdminMode={handleToggleAdminMode}
+        onSecretClick={handleSecretClick}
       />
 
       <main>
@@ -294,7 +330,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer onSecretClick={handleSecretClick} />
 
       {/* Security Gate authentication modal */}
       <AuthModal 
@@ -317,35 +353,37 @@ export default function App() {
       <Toast showSavedToast={showSavedToast} />
 
       {/* Persistent Floating Admin Trigger Button */}
-      <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2.5">
-        {isAdminMode && (
-          <div className="bg-navy-dark text-white border border-gold/40 px-4 py-2 rounded-sm text-[10px] font-sans font-bold shadow-2xl flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>กำลังอยู่ในโหมดผู้ดูแล: กดเครื่องมือแก้ไขด้านล่างได้ทันทีค่ะ</span>
-          </div>
-        )}
-        
-        <button
-          onClick={handleToggleAdminMode}
-          className={`shadow-[0_20px_50px_rgba(0,0,0,0.3)] md:px-6 px-5 py-4.5 rounded-full font-bold text-xs uppercase tracking-widest transition-all flex items-center gap-3 border cursor-pointer ${
-            isAdminMode 
-              ? "bg-gold text-navy-dark border-gold scale-105 active:scale-95 shadow-gold/20" 
-              : "bg-navy-dark text-white border-gold/40 hover:bg-gold hover:text-navy-dark hover:border-gold hover:scale-105 active:scale-95"
-          }`}
-          title="สลับโหมดผู้ดูแลเพื่อแก้ไขรูปภาพและวิดีโอ"
-        >
-          {isAdminMode ? (
-            <ShieldCheck size={16} className="text-navy-dark" />
-          ) : isLoggedIn ? (
-            <Unlock size={16} className="text-gold" />
-          ) : (
-            <Lock size={16} className="text-gold" />
+      {isLoggedIn && (
+        <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2.5">
+          {isAdminMode && (
+            <div className="bg-navy-dark text-white border border-gold/40 px-4 py-2 rounded-sm text-[10px] font-sans font-bold shadow-2xl flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>กำลังอยู่ในโหมดผู้ดูแล: กดเครื่องมือแก้ไขด้านล่างได้ทันทีค่ะ</span>
+            </div>
           )}
-          <span className="font-sans font-black tracking-normal">
-            {isAdminMode ? "ปิดโหมดแก้ไข" : "สลับเปิดโหมดผู้ดูแลแก้ไขด่วน 📷"}
-          </span>
-        </button>
-      </div>
+          
+          <button
+            onClick={handleToggleAdminMode}
+            className={`shadow-[0_20px_50px_rgba(0,0,0,0.3)] md:px-6 px-5 py-4.5 rounded-full font-bold text-xs uppercase tracking-widest transition-all flex items-center gap-3 border cursor-pointer ${
+              isAdminMode 
+                ? "bg-gold text-navy-dark border-gold scale-105 active:scale-95 shadow-gold/20" 
+                : "bg-navy-dark text-white border-gold/40 hover:bg-gold hover:text-navy-dark hover:border-gold hover:scale-105 active:scale-95"
+            }`}
+            title="สลับโหมดผู้ดูแลเพื่อแก้ไขรูปภาพและวิดีโอ"
+          >
+            {isAdminMode ? (
+              <ShieldCheck size={16} className="text-navy-dark" />
+            ) : isLoggedIn ? (
+              <Unlock size={16} className="text-gold" />
+            ) : (
+              <Lock size={16} className="text-gold" />
+            )}
+            <span className="font-sans font-black tracking-normal">
+              {isAdminMode ? "ปิดโหมดแก้ไข" : "สลับเปิดโหมดผู้ดูแลแก้ไขด่วน 📷"}
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

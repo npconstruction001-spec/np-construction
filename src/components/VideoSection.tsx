@@ -133,7 +133,7 @@ export default function VideoSection({
       {
         title: "THE ENGINEERING JOURNEY",
         subtitle: "Corporate Video Showcase",
-        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-construction-worker-at-a-site-working-with-concrete-41584-large.mp4"
+        videoUrl: "https://drive.google.com/file/d/12EhuHkgHPf5l-14avPTvwj6YPSVXMHUK/view?usp=drive_link"
       },
       {
         title: "งานติดตั้งและเดินระบบไฟฟ้าตู้ควบคุม MDB",
