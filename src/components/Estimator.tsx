@@ -9,7 +9,15 @@ import {
   CheckCircle2,
   Cpu,
   Boxes,
-  Activity
+  Activity,
+  FileText,
+  Layers,
+  ShieldAlert,
+  TrendingUp,
+  Info,
+  ChevronRight,
+  HelpCircle,
+  Terminal
 } from "lucide-react";
 
 export default function Estimator() {
@@ -18,6 +26,8 @@ export default function Estimator() {
   const [calcQuality, setCalcQuality] = useState<"standard" | "premium">("standard");
   const [calcSmartSystems, setCalcSmartSystems] = useState<boolean>(false);
   const [calcIsUpdating, setCalcIsUpdating] = useState<boolean>(false);
+  const [budgetStandard, setBudgetStandard] = useState<"RICS_NRM" | "CSI_UNIFORMAT">("RICS_NRM");
+  const [showBOQPreview, setShowBOQPreview] = useState<boolean>(false);
 
   const calculateBudget = () => {
     const base = calcType === "factory" ? 13500 : calcType === "store" ? 18500 : calcType === "office" ? 15500 : 22000;
@@ -27,6 +37,205 @@ export default function Estimator() {
     const minVal = Math.round(total * 0.9);
     const maxVal = Math.round(total * 1.15);
     return { minVal, maxVal };
+  };
+
+  const getStandardBreakdown = () => {
+    const { minVal, maxVal } = calculateBudget();
+    let weights: { code: string; nameTH: string; nameEN: string; pct: number; desc: string; bg: string }[] = [];
+    
+    if (budgetStandard === "RICS_NRM") {
+      let substructure = 12;
+      let superstructure = 28;
+      let finishes = 15;
+      let services = 25;
+      let prelims = 12;
+      let contingency = 8;
+      
+      if (calcType === "factory") {
+        substructure = 15;
+        superstructure = 35;
+        finishes = 10;
+        services = 20;
+      } else if (calcType === "store") {
+        substructure = 10;
+        superstructure = 22;
+        finishes = 28;
+        services = 18;
+      } else if (calcType === "office") {
+        substructure = 13;
+        superstructure = 30;
+        finishes = 15;
+        services = 22;
+      } else if (calcType === "electrical") {
+        substructure = 5;
+        superstructure = 10;
+        finishes = 4;
+        services = 61;
+      }
+      
+      if (calcSmartSystems) {
+        services += 4;
+        superstructure -= 2;
+        finishes -= 2;
+      }
+      
+      const totalPct = substructure + superstructure + finishes + services + prelims + contingency;
+      if (totalPct !== 100) {
+        contingency += (100 - totalPct);
+      }
+      
+      weights = [
+        { 
+          code: "NRM 1.1", 
+          nameTH: "งานโครงสร้างใต้ดินและเสาเข็ม", 
+          nameEN: "Substructure Foundations", 
+          pct: substructure, 
+          desc: "เสาเข็มเจาะ คอนกรีตฐานราก คานคอดิน และระบบระบายความชื้นใต้สแลบคอนกรีต", 
+          bg: "bg-amber-500" 
+        },
+        { 
+          code: "NRM 1.2", 
+          nameTH: "งานโครงสร้างหลักส่วนบน", 
+          nameEN: "Superstructure Frame & Shell", 
+          pct: superstructure, 
+          desc: "เสา คาน แผ่นพื้น โครงถักเหล็กรับหลังคา (Trusses) และฝาผนังแผงหลัก", 
+          bg: "bg-sky-500" 
+        },
+        { 
+          code: "NRM 1.3", 
+          nameTH: "งานสถาปัตยกรรมและวัสดุผิวตกแต่ง", 
+          nameEN: "Internal & External Finishes", 
+          pct: finishes, 
+          desc: "ปูพื้น ผนังกั้นห้อง งานสีอุตสาหกรรม ฝ้าเพดาน และวัสดุกันการสะท้อนคาร์บอน", 
+          bg: "bg-emerald-500" 
+        },
+        { 
+          code: "NRM 1.4", 
+          nameTH: "ระบบวิศวกรรมอาคารและจัดส่งพลังงาน", 
+          nameEN: "Building Services (MEP & Utility)", 
+          pct: services, 
+          desc: "ตู้ควบคุม MDB, โหลดเซ็นเตอร์, ไฟฟ้ากำลัง 3 เฟส, ดับเพลิง และปรับอากาศ Smart HVAC", 
+          bg: "bg-indigo-500" 
+        },
+        { 
+          code: "NRM 1.5", 
+          nameTH: "งานเตรียมการก่อสร้างและวิศวกรวิชาชีพ", 
+          nameEN: "Site Preliminaries & Prof. Fees", 
+          pct: prelims, 
+          desc: "งานนั่งร้านชั่วคราว, ที่พักคนงาน, ควบคุมหลักวิชาการโดยวิศวกรโยธาควบคุม และประกันความเสียหาย", 
+          bg: "bg-slate-400" 
+        },
+        { 
+          code: "NRM 1.6", 
+          nameTH: "งบประมาณสำรองเผื่อสภาวะผันผวนระดับสากล", 
+          nameEN: "Engineering Contingency Buffer", 
+          pct: contingency, 
+          desc: "อัตราสำรองเผื่อสภาพภูมิอากาศแปรปรวน, ปรับแต่งวัสดุฉุกเฉิน หรือกรณีเหล็กและพลังงานผันแปร", 
+          bg: "bg-rose-500" 
+        }
+      ];
+    } else {
+      let substructure = 14;
+      let shell = 30;
+      let interiors = 15;
+      let services = 24;
+      let sitework = 10;
+      let contingency = 7;
+      
+      if (calcType === "factory") {
+        substructure = 16;
+        shell = 33;
+        interiors = 9;
+        services = 22;
+      } else if (calcType === "store") {
+        substructure = 10;
+        shell = 20;
+        interiors = 32;
+        services = 20;
+      } else if (calcType === "office") {
+        substructure = 14;
+        shell = 28;
+        interiors = 16;
+        services = 24;
+      } else if (calcType === "electrical") {
+        substructure = 6;
+        shell = 9;
+        interiors = 3;
+        services = 64;
+      }
+      
+      if (calcSmartSystems) {
+        services += 5;
+        shell -= 3;
+        interiors -= 2;
+      }
+      
+      const totalPct = substructure + shell + interiors + services + sitework + contingency;
+      if (totalPct !== 100) {
+        contingency += (100 - totalPct);
+      }
+      
+      weights = [
+        { 
+          code: "CSI Sec A", 
+          nameTH: "ระบบฐานรากและโครงสร้างหลักใต้แผ่นพื้น", 
+          nameEN: "Substructure Foundations (Group A)", 
+          pct: substructure, 
+          desc: "เสาเข็มเจาะรับแรงกดดันสูง, คอนกรีตหล่อฐานราก และคานคอดิน", 
+          bg: "bg-amber-600" 
+        },
+        { 
+          code: "CSI Sec B", 
+          nameTH: "เปลือกนอกอาคาร พื้น และแผ่นหลังคา", 
+          nameEN: "Exterior Shell & Roof (Group B)", 
+          pct: shell, 
+          desc: "โครงคานเหล็กรับแรงดัด, มุงแผ่นหลังคากันความร้อน, ผนังกระจกสลับ และประตูน้ำหนักสูง", 
+          bg: "bg-sky-600" 
+        },
+        { 
+          code: "CSI Sec C", 
+          nameTH: "งานแบ่งสเปซ กั้นห้อง และอินทีเรียภายใน", 
+          nameEN: "Interior Construction (Group C)", 
+          pct: interiors, 
+          desc: "ผนังกั้นทนไฟ, ยิปซั่มบอร์ดฟอยล์กันความร้อน, ประตูระบายนิรภัย และวัสดุพื้นผิวพิเศษ", 
+          bg: "bg-emerald-600" 
+        },
+        { 
+          code: "CSI Sec D", 
+          nameTH: "ระบบสาธารณูปโภควิศวกรรมรวมศูนย์", 
+          nameEN: "Mechanical & Electrical Services (Group D)", 
+          pct: services, 
+          desc: "ตู้ควบคุมไฟฟ้าหลัก MDB, สายไฟแรงดันสูง, ระบบท่อส่งก๊าซ/น้ำดีเสีย และไอทีเชื่อมต่อเซนเซอร์", 
+          bg: "bg-indigo-600" 
+        },
+        { 
+          code: "CSI Sec E/G", 
+          nameTH: "งานเตรียมพื้นที่หน้าดินและภูมิทัศน์รับน้ำ", 
+          nameEN: "Sitework & Equipment Facilities (Group E/G)", 
+          pct: sitework, 
+          desc: "ปรับถมดินระดับสากล, วางแนวกำบังเสียงรบกวนภายนอก และทางเท้าสาธารณะขอบเขตโครงการ", 
+          bg: "bg-slate-500" 
+        },
+        { 
+          code: "CSI Sec F", 
+          nameTH: "ค่าบริการจัดการหน้าสนามทั่วไปและงบวิกฤต", 
+          nameEN: "General Conditions & Contingency (Group F)", 
+          pct: contingency, 
+          desc: "ค่าขออนุญาตโยธาสิ่งแวดล้อม EIA/IEE, งบสำรองช่างและการทดสอบระบบสมบูรณ์ก่อนรับมอบ", 
+          bg: "bg-rose-600" 
+        }
+      ];
+    }
+    
+    return weights.map(w => {
+      const itemMin = Math.round(minVal * (w.pct / 100));
+      const itemMax = Math.round(maxVal * (w.pct / 100));
+      return {
+        ...w,
+        itemMin,
+        itemMax
+      };
+    });
   };
 
   const handleSendToContact = () => {
@@ -515,6 +724,250 @@ export default function Estimator() {
             </div>
           </div>
         </div>
+
+        {/* ========================================================== */}
+        {/* INTERNATIONAL BUDGET ANALYSIS STANDARDS DASHBOARD */}
+        {/* ========================================================== */}
+        <div className="mt-12 bg-white border border-slate-200 shadow-xl overflow-hidden rounded-sm p-6 md:p-10 space-y-8 font-sans">
+          
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-slate-100 pb-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-gold">
+                <FileText size={18} />
+                <span className="text-[11px] font-bold uppercase tracking-widest font-mono">Cost Model Analysis Index</span>
+              </div>
+              <h3 className="text-xl md:text-2xl font-tech uppercase tracking-tight text-navy-dark">
+                วิเคราะห์สัดส่วนงบประมาณตามหลักการวัดสากล
+              </h3>
+              <p className="text-xs text-slate-400 max-w-2xl font-light leading-relaxed">
+                ระบบจำลองการจัดสรรงบประมาณก่อสร้าง (Quantity Surveying Cost Plan) อ้างอิงตามกรรมวิธีวิเคราะห์สหัสสัญญาสากลที่วิศวกรควบคุมและสถาบันตรวจสอบวิชาชีพยอมรับระยาวร่วมกับนักพัฒนาโครงการ
+              </p>
+            </div>
+
+            {/* Methods Tabs Selection */}
+            <div className="flex flex-col sm:flex-row gap-2 bg-slate-50 p-1.5 rounded border border-slate-100 self-start lg:self-center">
+              <button
+                type="button"
+                onClick={() => setBudgetStandard("RICS_NRM")}
+                className={`px-4 py-2.5 rounded-sm text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                  budgetStandard === "RICS_NRM"
+                    ? "bg-navy-dark text-white shadow-md font-extrabold"
+                    : "text-slate-600 hover:text-navy-dark hover:bg-slate-100"
+                }`}
+              >
+                <Layers size={13} />
+                <span>RICS NRM 1 (อังกฤษ/สากล)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setBudgetStandard("CSI_UNIFORMAT")}
+                className={`px-4 py-2.5 rounded-sm text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                  budgetStandard === "CSI_UNIFORMAT"
+                    ? "bg-navy-dark text-white shadow-md font-extrabold"
+                    : "text-slate-600 hover:text-navy-dark hover:bg-slate-100"
+                }`}
+              >
+                <Boxes size={13} />
+                <span>CSI UNIFORMAT II (อเมริกา/BIM)</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Standard Introduction Note */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-slate-50 p-4 border border-slate-100 rounded-sm">
+            <div className="md:col-span-8 flex items-start gap-3">
+              <div className="text-gold pt-0.5">
+                <Info size={16} />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-xs font-bold text-navy-dark">
+                  {budgetStandard === "RICS_NRM" 
+                    ? "RICS NRM 1 (New Rules of Measurement: Capital cost planning for building works)" 
+                    : "CSI UNIFORMAT II (ASTM E1557 Standard Classification for Building Elements)"}
+                </h4>
+                <p className="text-[11px] text-slate-500 leading-relaxed font-light">
+                  {budgetStandard === "RICS_NRM"
+                    ? "หลักการคำนวณมาตรฐานโดยสถาบันผู้ประเมินรังวัดอาชีพสากล (RICS) แห่งสหราชอาณาจักร นิยมใช้ในการวิเคราะห์และจัดสรรต้นทุนโครงสร้าง (Cost Plan) ตลอดสายงานผลิตโยธาก่อสร้างเพื่อลดความแปรปรวนของวัสดุในระดับสากล"
+                    : "ระเบียบจัดหมวดหมู่กลุ่มระบบก่อสร้าง (Elemental Specifications) โดยองค์กร CSI ประเทศสหรัฐอเมริกา นิยมเชื่อมต่อข้อมูล BOQ เข้ากับระบบวิเคราะห์ BIM ทั่วโลก ช่วยแปลงแบบร่างโครงสร้างเป็นสเปคจัดสรรงบที่สอดคล้องกับสภาพหน้างานวิศวกรรม"}
+                </p>
+              </div>
+            </div>
+            <div className="md:col-span-4 flex items-center justify-start md:justify-end gap-1.5 md:border-l md:border-slate-200 md:pl-6">
+              <ShieldAlert size={14} className="text-gold flex-shrink-0" />
+              <div className="text-[10px] text-slate-400">
+                <span className="font-extrabold text-navy-dark block">ควบคุมดัชนีคลาดเคลื่อน</span>
+                ระยะแบบจำลองขั้นแนวคิด: <span className="text-rose-500 font-bold font-mono">±12% - 15%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Compound Allocation Vis Bar */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-center text-[10px] text-slate-450 font-mono">
+              <span className="flex items-center gap-1.5 uppercase font-bold text-navy-dark"><TrendingUp size={12} className="text-gold animate-pulse" /> Compound Cost Distribution / อัตราส่วนกระจ่ายตัวรวม (%)</span>
+              <span>รวม 100%</span>
+            </div>
+            
+            {/* Horizontal compound stack percentage graph */}
+            <div className="h-6 w-full rounded overflow-hidden flex shadow-inner bg-slate-100 border border-slate-200">
+              {getStandardBreakdown().map((item) => (
+                <div
+                  key={item.code}
+                  style={{ width: `${item.pct}%` }}
+                  className={`${item.bg} h-full transition-all duration-300 relative group/slice`}
+                  title={`${item.nameTH}: ${item.pct}%`}
+                >
+                  {/* Tooltip on Hover */}
+                  <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-navy-dark text-white text-[9px] font-mono px-3 py-1.5 rounded whitespace-nowrap opacity-0 pointer-events-none group-hover/slice:opacity-100 transition-opacity z-50 shadow-2xl border border-white/10 flex flex-col items-center">
+                    <span className="text-gold font-bold">{item.code} - {item.pct}%</span>
+                    <span>{item.nameTH}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Micro Color Legend Labels */}
+            <div className="flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-slate-500 font-mono">
+              {getStandardBreakdown().map((item) => (
+                <div key={item.code} className="flex items-center gap-1.5">
+                  <span className={`w-2.5 h-2.5 ${item.bg} rounded`}></span>
+                  <span className="font-bold text-navy-dark">{item.code}</span>
+                  <span>{item.pct}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Breakdown Items List Grid */}
+          <div className="border border-slate-200 rounded-sm overflow-hidden shadow-sm">
+            <div className="bg-slate-50 border-b border-slate-200 grid grid-cols-12 p-4 text-[10px] font-mono text-slate-450 font-extrabold uppercase tracking-wider">
+              <div className="col-span-2">รหัสสากล</div>
+              <div className="col-span-7">หัวข้อรายการรายละเอียด / ขอบเขตงานวิศวกรรม</div>
+              <div className="col-span-3 text-right">สัดส่วนตามหลักสากล</div>
+            </div>
+
+            <div className="divide-y divide-slate-100 bg-white">
+              {getStandardBreakdown().map((item) => (
+                <div key={item.code} className="grid grid-cols-12 p-4 items-center hover:bg-slate-50/50 transition-all text-sm gap-y-2 md:gap-y-0 text-navy-dark">
+                  {/* Code */}
+                  <div className="col-span-12 md:col-span-2 font-mono text-xs font-black text-slate-400 flex items-center md:block">
+                    <span className="md:hidden text-[10px] font-mono text-slate-450 mr-2 uppercase">รหัส:</span>
+                    <span className="bg-slate-100 border border-slate-200 text-slate-700 px-2.5 py-1 rounded text-[10px] font-sans font-bold">
+                      {item.code}
+                    </span>
+                  </div>
+
+                  {/* Name and specification description */}
+                  <div className="col-span-12 md:col-span-7 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 ${item.bg} rounded`}></span>
+                      <h4 className="font-bold text-navy-dark text-xs md:text-sm">{item.nameTH}</h4>
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                      <p className="text-[10px] font-mono font-semibold text-slate-400">{item.nameEN}</p>
+                      <p className="text-[11px] text-slate-500 font-light">&bull; {item.desc}</p>
+                    </div>
+                  </div>
+
+                  {/* Percentage */}
+                  <div className="col-span-12 md:col-span-3 text-left md:text-right">
+                    <span className="md:hidden text-[10px] text-slate-400 font-mono mr-2 uppercase">สัดส่วน:</span>
+                    <span className="font-mono text-xs font-extrabold px-3 py-1 bg-slate-50 text-navy-dark border border-slate-250 rounded">
+                      {item.pct}%
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* BOQ Live Interactive Console Box */}
+          <div className="border border-slate-200 bg-slate-50/70 p-6 rounded-sm space-y-5">
+            <div className="flex flex-col md:flex-row items-col md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-navy-dark">
+                  <Terminal size={16} className="text-gold" />
+                  <h4 className="font-tech text-sm uppercase tracking-wider font-bold">Draft Bill of Quantities (BOQ) Generator</h4>
+                </div>
+                <p className="text-[11px] text-slate-500 font-light">
+                  ร่างรายละเอียดสัดส่วนโครงสร้างผลวิศวกรรมสากลสอดคล้องกับกรรมวิธีวัดสากล เพื่อนำไปอ้างอิงและประเมินสเปคงาน
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowBOQPreview(!showBOQPreview)}
+                className="bg-navy-dark hover:bg-gold hover:text-navy-dark text-white px-5 py-2.5 rounded-sm text-xs font-mono font-bold uppercase tracking-wider transition-all self-start md:self-center cursor-pointer border border-white/5 shadow flex items-center gap-2"
+              >
+                <span>{showBOQPreview ? "▲ ปิดดราฟต์ BOQ สากล" : "📑 เรียกดูดราฟต์ BOQ สากล"}</span>
+              </button>
+            </div>
+
+            {/* Interactive Simulated BOQ Console Block */}
+            {showBOQPreview && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="bg-[#040913] text-emerald-400 font-mono text-[10.5px] p-4 md:p-6 rounded border border-white/10 overflow-x-auto selection:bg-gold selection:text-navy-dark shadow-2xl relative"
+              >
+                {/* Simulated Console Controls */}
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block"></span>
+                </div>
+
+                <div className="space-y-4 leading-relaxed">
+                  <div>
+                    <span className="text-slate-500 block border-b border-white/10 pb-1 mb-2"># COLD GENERATION: OUTLINE DRAFT BILL OF QUANTITIES ({budgetStandard === "RICS_NRM" ? "RICS NRM-1" : "CSI UNIFORMAT II"})</span>
+                    <span className="text-slate-400 block font-bold text-[11px]">PROJECT REFERENCE CODE NO: NP-QS-{(calcArea * 17).toString(16).toUpperCase()}</span>
+                    <span className="text-slate-400 block uppercase">TARGET WORKSPACE: {calcType === "factory" ? "FACTORY / WAREHOUSE SITE" : calcType === "store" ? "COMMERCIAL RETAIL SPACE" : calcType === "office" ? "MULTIFUNCTIONAL OFFICE BUILDING" : "ELECTRICAL SUB-STATION ENGINEERING"}</span>
+                    <span className="text-slate-400 block">PROPOSED STANDARD SCOPE AREA: {calcArea.toLocaleString()} SQ.M.</span>
+                    <span className="text-slate-400 block">CONSTRUCTION SPECIFICATION GRADE: {calcQuality === "premium" ? "HIGH-PERFORMANCE PREMIUM MATERIALS" : "STANDARD BUILDING CODE COMPLIANT"}</span>
+                    <span className="text-slate-400 block">SYSTEM CLASSIFICATION AUTOMATION: {calcSmartSystems ? "INTEGRATED ECO-SOLAR SMART CONTROL [ACTIVE]" : "NOT APPLICABLE"}</span>
+                  </div>
+
+                  <div className="border-t border-dashed border-white/10 pt-3">
+                    <span className="text-gold font-bold block mb-2">========================= DRAFT QUANTITIES BREAKDOWN =========================</span>
+                    
+                    {/* Header Columns inside Console */}
+                    <div className="grid grid-cols-12 gap-1 text-slate-400 border-b border-white/10 pb-1.5 font-bold mb-2 text-[9.5px]">
+                      <div className="col-span-3">REF CODE</div>
+                      <div className="col-span-7">DESCRIPTION OF QUANTITY ELEMENT</div>
+                      <div className="col-span-2 text-right font-bold">PCT(%)</div>
+                    </div>
+
+                    {/* Table inside Console */}
+                    <div className="space-y-2">
+                      {getStandardBreakdown().map((item) => (
+                        <div key={item.code} className="grid grid-cols-12 gap-1 text-emerald-300 font-mono hover:text-white transition-colors">
+                          <div className="col-span-3 text-slate-500 font-bold">{item.code}</div>
+                          <div className="col-span-7 text-slate-300 truncate">{item.nameTH} / {item.nameEN}</div>
+                          <div className="col-span-2 text-right font-bold text-gold">{item.pct}%</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-12 gap-1 text-white border-t border-white/10 pt-2.5 mt-2.5 font-bold">
+                      <div className="col-span-10 uppercase text-slate-400">TOTAL COMBINED ALLOCATION RATIO</div>
+                      <div className="col-span-2 text-right text-gold underline underline-offset-4">100%</div>
+                    </div>
+                  </div>
+
+                  <div className="text-[9.5px] text-slate-400 border-t border-white/10 pt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <span>* GENERATION TIME: {new Date().toISOString()} • IN COMPLIANCE WITH RICS CODE / CSI ELEMENT CONTRACT</span>
+                    <span className="text-emerald-500 animate-pulse font-bold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+                      SYSTEM VERIFIED OK
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </div>
+
       </div>
     </section>
   );

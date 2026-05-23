@@ -29,6 +29,7 @@ export default function Portfolio({
   const [confirmDeleteIdx, setConfirmDeleteIdx] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>("ทั้งหมด");
   const [newImgUrl, setNewImgUrl] = useState<string>("");
+  const [isZoomOpen, setIsZoomOpen] = useState<boolean>(false);
 
   const categories = [
     "ทั้งหมด",
@@ -249,13 +250,20 @@ export default function Portfolio({
                     {/* Left Side: Images & Gallery (7 Cols) */}
                     <div className="lg:col-span-7 bg-[#050C18] p-6 flex flex-col gap-4 border-r border-white/5">
                       {/* Active Large Image Display */}
-                      <div className="aspect-[4/3] md:aspect-video w-full overflow-hidden border border-white/10 relative rounded-sm bg-black flex items-center justify-center">
+                      <div 
+                        onClick={() => setIsZoomOpen(true)}
+                        className="aspect-[4/3] w-full overflow-hidden border border-white/10 relative rounded-sm bg-black flex items-center justify-center group/img cursor-zoom-in"
+                        title="คลิกเพื่อขยายรูปแบบ 4:3"
+                      >
                         <img
                           src={activeImage}
                           alt={proj.title}
                           referrerPolicy="no-referrer"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-102"
                         />
+                        <div className="absolute top-4 left-4 bg-navy-dark/95 text-gold hover:text-white px-3 py-1.5 rounded-sm text-[10px] font-sans font-bold tracking-wide transition-all border border-gold/20 flex items-center gap-1.5 shadow-md">
+                          <span>🔍 คลิกเพื่อขยายใหญ่</span>
+                        </div>
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex justify-between items-end">
                           <span className="text-[10px] text-gold font-sans font-bold tracking-wide bg-navy-dark/90 px-3 py-1.5 rounded border border-gold/20">
                             รูปที่ {activeGalleryIdx + 1} / {galleryList.length} รูป
@@ -587,6 +595,90 @@ export default function Portfolio({
                         >
                           ปิดหน้าต่าง ✖
                         </button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            );
+          })()}
+        </AnimatePresence>
+
+        {/* Fullscreen 4:3 Image Lightbox/Zoom Modal */}
+        <AnimatePresence>
+          {isZoomOpen && selectedProjectIdx !== null && portfolio[selectedProjectIdx] && (() => {
+            const proj = portfolio[selectedProjectIdx];
+            const galleryList = proj.gallery || [proj.image || proj.fallback];
+            const activeImage = galleryList[activeGalleryIdx] || proj.image || proj.fallback;
+
+            return (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[120] flex items-center justify-center bg-black/98 p-4 md:p-12 font-sans"
+                onClick={() => setIsZoomOpen(false)}
+              >
+                {/* Close Button */}
+                <button
+                  onClick={() => setIsZoomOpen(false)}
+                  className="absolute top-6 right-6 z-50 bg-navy-light hover:bg-gold hover:text-navy-dark text-white p-3 rounded-full transition-all cursor-pointer border border-white/10 flex items-center justify-center shadow-lg"
+                  title="ปิดภาพขยาย"
+                >
+                  <X size={24} />
+                </button>
+
+                <motion.div
+                  initial={{ scale: 0.95 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0.95 }}
+                  className="w-full max-w-4xl flex flex-col items-center justify-center relative shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* 4:3 Image Container */}
+                  <div className="aspect-[4/3] w-full max-h-[85vh] overflow-hidden border border-gold/40 relative rounded-sm bg-black flex items-center justify-center shadow-[0_0_50px_rgba(212,163,89,0.25)]">
+                    <img
+                      src={activeImage}
+                      alt={proj.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover"
+                    />
+                    
+                    {/* Navigation inside Lightbox (Next/Prev) if gallery is > 1 */}
+                    {galleryList.length > 1 && (
+                      <>
+                        <button
+                          onClick={() => {
+                            setActiveGalleryIdx((prev) => (prev === 0 ? galleryList.length - 1 : prev - 1));
+                          }}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/75 hover:bg-gold hover:text-navy-dark text-gold md:text-white w-12 h-12 rounded-full transition-all border border-white/10 flex items-center justify-center text-xl cursor-pointer"
+                          title="รูปภาพก่อนหน้า"
+                        >
+                          ‹
+                        </button>
+                        <button
+                          onClick={() => {
+                            setActiveGalleryIdx((prev) => (prev === galleryList.length - 1 ? 0 : prev + 1));
+                          }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/75 hover:bg-gold hover:text-navy-dark text-gold md:text-white w-12 h-12 rounded-full transition-all border border-white/10 flex items-center justify-center text-xl cursor-pointer"
+                          title="รูปภาพถัดไป"
+                        >
+                          ›
+                        </button>
+                      </>
+                    )}
+
+                    {/* Meta info of the image */}
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-6 text-left">
+                      <p className="text-xs text-gold font-sans tracking-wide font-extrabold uppercase mb-1">{proj.category}</p>
+                      <h4 className="text-sm md:text-base font-bold text-white line-clamp-1">{proj.title}</h4>
+                      <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/10">
+                        <span className="text-[11px] text-slate-300 font-sans">
+                          รูปที่ {activeGalleryIdx + 1} จากทั้งหมด {galleryList.length} รูป
+                        </span>
+                        <span className="text-[10px] bg-gold/15 text-gold border border-gold/30 px-3 py-1 rounded font-bold font-sans">
+                          ภาพขนาดขยายใหญ่สากล 4:3
+                        </span>
                       </div>
                     </div>
                   </div>
