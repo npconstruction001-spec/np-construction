@@ -131,8 +131,8 @@ export default function VideoSection({
   const handleResetVideoToCorporate = () => {
     const defaultVideos = [
       {
-        title: "THE ENGINEERING JOURNEY",
-        subtitle: "Corporate Video Showcase",
+        title: "งานระะบบ Facade",
+        subtitle: "ขั้นตอนการทำงาน",
         videoUrl: "https://drive.google.com/file/d/12EhuHkgHPf5l-14avPTvwj6YPSVXMHUK/view?usp=drive_link"
       },
       {
