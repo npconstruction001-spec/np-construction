@@ -16,7 +16,8 @@ import {
   imgBannerLeft, 
   imgBannerRight, 
   imgPowerPlant, 
-  imgTescoLotus 
+  imgTescoLotus,
+  imgLotusConstruction
 } from "../constants/data";
 
 interface SlideData {
@@ -39,7 +40,7 @@ export default function Hero({
 }: HeroProps) {
   // Initialize slider state from localStorage
   const [slides, setSlides] = useState<SlideData[]>(() => {
-    const saved = localStorage.getItem("np_hero_slides_v4");
+    const saved = localStorage.getItem("np_hero_slides_v5");
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -63,7 +64,7 @@ export default function Hero({
       {
         title: "PRECISE POWER & MEP ENGINEERING SYSTEM",
         subtitle: "ดูแลจัดการ วางผัง และควบคุมระบบไฟฟ้ากำลัง MDB หม้อแปลงแรงดันสูง ระบบปรับอากาศ และเชื่อมโยงท่อน้ำประปาครบสูตรอัจฉริยะ",
-        image: imgPowerPlant,
+        image: imgLotusConstruction,
         badge: "MEP & ELECTRICAL UTILITY"
       }
     ];
@@ -126,7 +127,7 @@ export default function Hero({
       badge: draftBadge
     };
     setSlides(updated);
-    localStorage.setItem("np_hero_slides_v4", JSON.stringify(updated));
+    localStorage.setItem("np_hero_slides_v5", JSON.stringify(updated));
     triggerSavedToast();
   };
 
@@ -163,12 +164,12 @@ export default function Hero({
         {
           title: "PRECISE POWER & MEP ENGINEERING SYSTEM",
           subtitle: "ดูแลจัดการ วางผัง และควบคุมระบบไฟฟ้ากำลัง MDB หม้อแปลงแรงดันสูง ระบบปรับอากาศ และเชื่อมโยงท่อน้ำประปาครบสูตรอัจฉริยะ",
-          image: imgPowerPlant,
+          image: imgLotusConstruction,
           badge: "MEP & ELECTRICAL UTILITY"
         }
       ];
       setSlides(defaultSlides);
-      localStorage.setItem("np_hero_slides_v4", JSON.stringify(defaultSlides));
+      localStorage.setItem("np_hero_slides_v5", JSON.stringify(defaultSlides));
       setCurrentSlideIdx(0);
       setEditingSlideIdx(0);
       triggerSavedToast();
@@ -310,7 +311,7 @@ export default function Hero({
           </div>
 
           {/* Right side interactive content - Admin Panel for live adjustments */}
-          <div className="lg:col-span-4 lg:block">
+          <div className="lg:col-span-4 lg:block lg:self-end lg:mb-8">
             {isAdminMode ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -434,7 +435,7 @@ export default function Hero({
               </motion.div>
             ) : (
               // Beautiful minimal trust statistics overview mimicking AESCON right margins
-              <div className="bg-slate-950/40 backdrop-blur-sm border border-white/5 py-8 px-10 rounded-sm space-y-6 text-left hidden lg:block">
+              <div className="bg-slate-950/45 backdrop-blur-sm border border-white/5 py-5 px-7 rounded-sm space-y-4 text-left hidden lg:block lg:translate-y-4 shadow-xl">
                 <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-red-500 font-black block">CORPORATE REPUTATION</span>
                 
                 <div className="grid grid-cols-2 gap-6">

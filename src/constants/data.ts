@@ -13,6 +13,7 @@ import imgPowerPlant from "../assets/images/regenerated_image_1779243351642.jpg"
 import imgBannerLeft from "../assets/images/banner_left_engineers_uniform_1779252458151.png";
 import imgBannerRight from "../assets/images/banner_right_workers_uniform_1779252795939.png";
 import imgAbout from "../assets/images/regenerated_image_1779258325604.png";
+import imgLotusConstruction from "../assets/images/banner_lotus_construction_1779522120102.png";
 
 export {
   imgTescoLotus,
@@ -21,7 +22,8 @@ export {
   imgPowerPlant,
   imgBannerLeft,
   imgBannerRight,
-  imgAbout
+  imgAbout,
+  imgLotusConstruction
 };
 
 export const NAV_LINKS = [
