@@ -43,49 +43,50 @@ export default function App() {
 
   // Editable Content States (Hero, About, Services)
   const [heroTitleL1, setHeroTitleL1] = useState<string>(() => {
-    return localStorage.getItem("np_hero_title_l1") || "PRECISION";
+    return localStorage.getItem("np_hero_title_l1_v4") || "Building Strong Foundations,";
   });
   const [heroTitleL2, setHeroTitleL2] = useState<string>(() => {
-    return localStorage.getItem("np_hero_title_l2") || "SAFETY";
+    return localStorage.getItem("np_hero_title_l2_v4") || "Conducting";
   });
   const [heroTitleGold, setHeroTitleGold] = useState<string>(() => {
-    return localStorage.getItem("np_hero_title_gold") || "ENGINEERING";
+    return localStorage.getItem("np_hero_title_gold_v4") || "Success";
   });
   const [heroSubtitle, setHeroSubtitle] = useState<string>(() => {
-    return localStorage.getItem("np_hero_subtitle") || "รับเหมาก่อสร้างโยธา วางสถานีระบบไฟฟ้า และงานเครื่องกลครอบคลุมทุกมิติตามมาตรฐานวิชาชีพควบคุม";
+    return localStorage.getItem("np_hero_subtitle_v4") || "หจก. เอ็นพี คอนดักชั่น - รับเหมาก่อสร้างและงานระบบวิศวกรรมครบวงจร ทั่วประเทศไทย ด้วยประสบการณ์กว่า 10 ปี และทีมวิศวกรผู้เชี่ยวชาญ มุ่งมั่นส่งมอบงานคุณภาพตรงเวลา ได้มาตรฐานสากล";
   });
 
   const [aboutTitleL1, setAboutTitleL1] = useState<string>(() => {
-    return localStorage.getItem("np_about_title_l1") || "PRECISE ENGINEERING FOR";
+    return localStorage.getItem("np_about_title_l1_v4") || "หจก. เอ็นพี คอนดักชั่น";
   });
   const [aboutTitleGold, setAboutTitleGold] = useState<string>(() => {
-    return localStorage.getItem("np_about_title_gold") || "INDUSTRIAL INFRASTRUCTURE";
+    return localStorage.getItem("np_about_title_gold_v4") || "วิสัยทัศน์ & จุดเด่นหลัก";
   });
   const [aboutDesc, setAboutDesc] = useState<string>(() => {
-    return localStorage.getItem("np_about_desc") || "ห้างหุ้นส่วนจำกัด เอ็นพี คอนดักชั่น (NP CONDUCTION Limited Partnership) เปี่ยมด้วยศักยภาพวิศวกรรมก่อสร้างและวางระบบสาธารณูปโภคขั้นพื้นฐานระดับควบคุม ครอบคลุมการบูรณาการระบบก่อสร้างอาคารเหล็กอุตสาหกรรม คลุมหน้างานประแจต่อสายไฟกำลังสูง และส่งมอบระบบระบายน้ำ ท่อสุขาภิบาลโยธา ตลอดจนโครงสร้างหม้อแปลงไฟฟ้าแรงงานแกร่งหนาทั่วราชอาณาจักรไทย";
+    return localStorage.getItem("np_about_desc_v4") || "วิสัยทัศน์ (Vision): สร้างสรรค์อนาคตการก่อสร้างที่มั่นคง ด้วยการมองการณ์ไกล ใส่ใจความปลอดภัย และรับผิดชอบในทุกผลงานเพื่อความพึงพอใจสูงสุดของลูกค้า\n\nเราคือผู้เชี่ยวชาญด้านงานรับเหมาก่อสร้างและงานระบบวิศวกรรมที่ได้รับความไว้วางใจจากทั้งหน่วยงานภาครัฐ (งานราชการ) และภาคเอกชนทั่วประเทศ พร้อมตอบสนองความต้องการของลูกค้าทุกประเภทอย่างมืออาชีพ";
   });
   const [aboutBullets, setAboutBullets] = useState<string[]>(() => {
-    const raw = localStorage.getItem("np_about_bullets_v2");
+    const raw = localStorage.getItem("np_about_bullets_v4");
     return raw ? JSON.parse(raw) : [
-      "โครงสร้างฐานเสาเข็มมั่นแกร่ง",
-      "เชื่อมโยงตู้นิรภัยวิศวกรรมไฟฟ้า",
-      "คุมความเสี่ยง ISO Safety มาตรฐานสากล"
+      "ประสบการณ์ยาวนานกว่า 10 ปี (บริหารงานสากล)",
+      "ทีมวิศวกรผู้เชี่ยวชาญ คุมความถูกต้องและปลอดภัยสูงสุด",
+      "พร้อมรับงานคุณภาพสว่างไสว ทั่วประเทศไทย",
+      "มีมาตรฐานสากลตอบสนองลูกค้าทุกประเภท (ราชการ & เอกชน)"
     ];
   });
 
   const [servicesSectionTitle, setServicesSectionTitle] = useState<string>(() => {
-    return localStorage.getItem("np_services_section_title") || "เชี่ยวชาญบริการ";
+    return localStorage.getItem("np_services_section_title_v4") || "บริการหลักผู้เชี่ยวชาญ";
   });
   const [servicesSectionGold, setServicesSectionGold] = useState<string>(() => {
-    return localStorage.getItem("np_services_section_gold") || "วิศวกรรมครบวงจร";
+    return localStorage.getItem("np_services_section_gold_v4") || "งานรับเหมา & วิศวกรรมระบบ";
   });
   const [servicesSectionDesc, setServicesSectionDesc] = useState<string>(() => {
-    return localStorage.getItem("np_services_section_desc") || "เราส่งมอบผลงานจากความประณีตและการร่วมมือกับสถาปนิกและวิศวกรผู้เชี่ยวชาญ คุมความท้าทายในระดับโครงสร้าง เสา คานคอดิน ถิ่นงานระบบอย่างทรหด";
+    return localStorage.getItem("np_services_section_desc_v4") || "หจก. เอ็นพี คอนดักชั่น มุ่งเน้นความโปร่งใสเป็นทางนำ เดินงานสถาปัตยกรรมและระบบควบคุมอย่างคล่องตัว รวดเร็ว ถูกราคา ปลอดภัยสูงสุด คลุมหน้างานประมูลและงานก่อสร้างทั่วประเทศไทย";
   });
 
   // Dynamic Lists Data (Services, Portfolio, Videos)
   const [servicesData, setServicesData] = useState<Service[]>(() => {
-    const saved = localStorage.getItem("np_services_data_v3");
+    const saved = localStorage.getItem("np_services_data_v4");
     return saved ? JSON.parse(saved) : SERVICES;
   });
 
@@ -157,27 +158,27 @@ export default function App() {
 
   // Sync edits automatically as they are entered (Offline First Persistence)
   useEffect(() => {
-    localStorage.setItem("np_hero_title_l1", heroTitleL1);
-    localStorage.setItem("np_hero_title_l2", heroTitleL2);
-    localStorage.setItem("np_hero_title_gold", heroTitleGold);
-    localStorage.setItem("np_hero_subtitle", heroSubtitle);
+    localStorage.setItem("np_hero_title_l1_v4", heroTitleL1);
+    localStorage.setItem("np_hero_title_l2_v4", heroTitleL2);
+    localStorage.setItem("np_hero_title_gold_v4", heroTitleGold);
+    localStorage.setItem("np_hero_subtitle_v4", heroSubtitle);
   }, [heroTitleL1, heroTitleL2, heroTitleGold, heroSubtitle]);
 
   useEffect(() => {
-    localStorage.setItem("np_about_title_l1", aboutTitleL1);
-    localStorage.setItem("np_about_title_gold", aboutTitleGold);
-    localStorage.setItem("np_about_desc", aboutDesc);
-    localStorage.setItem("np_about_bullets_v2", JSON.stringify(aboutBullets));
+    localStorage.setItem("np_about_title_l1_v4", aboutTitleL1);
+    localStorage.setItem("np_about_title_gold_v4", aboutTitleGold);
+    localStorage.setItem("np_about_desc_v4", aboutDesc);
+    localStorage.setItem("np_about_bullets_v4", JSON.stringify(aboutBullets));
   }, [aboutTitleL1, aboutTitleGold, aboutDesc, aboutBullets]);
 
   useEffect(() => {
-    localStorage.setItem("np_services_section_title", servicesSectionTitle);
-    localStorage.setItem("np_services_section_gold", servicesSectionGold);
-    localStorage.setItem("np_services_section_desc", servicesSectionDesc);
+    localStorage.setItem("np_services_section_title_v4", servicesSectionTitle);
+    localStorage.setItem("np_services_section_gold_v4", servicesSectionGold);
+    localStorage.setItem("np_services_section_desc_v4", servicesSectionDesc);
   }, [servicesSectionTitle, servicesSectionGold, servicesSectionDesc]);
 
   useEffect(() => {
-    localStorage.setItem("np_services_data_v3", JSON.stringify(servicesData));
+    localStorage.setItem("np_services_data_v4", JSON.stringify(servicesData));
   }, [servicesData]);
 
   // Utility to fire aesthetic green save indicators
@@ -317,6 +318,7 @@ export default function App() {
         {/* Media Showcase Section */}
         <div className="max-w-7xl mx-auto px-6 pb-24">
           <VideoSection 
+            isLoggedIn={isLoggedIn}
             isAdminMode={isAdminMode}
             setIsAdminMode={setIsAdminMode}
             videoPlaylists={videoPlaylists}

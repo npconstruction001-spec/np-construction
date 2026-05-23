@@ -17,6 +17,7 @@ import {
 } from "../utils/db";
 
 interface VideoSectionProps {
+  isLoggedIn: boolean;
   isAdminMode: boolean;
   setIsAdminMode: (v: boolean) => void;
   videoPlaylists: VideoItem[];
@@ -25,6 +26,7 @@ interface VideoSectionProps {
 }
 
 export default function VideoSection({
+  isLoggedIn,
   isAdminMode,
   setIsAdminMode,
   videoPlaylists,
@@ -285,18 +287,20 @@ export default function VideoSection({
                 )}
               </div>
               
-              <div className="border-t border-slate-200 pt-6 space-y-3">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block font-sans">เปิดโหมดผู้ดูแลเพื่อแก้ไข</span>
-                <button
-                  onClick={() => {
-                    setIsAdminMode(true);
-                  }}
-                  className="w-full bg-navy-dark hover:bg-gold text-white hover:text-navy-dark py-3.5 text-xs font-bold uppercase tracking-widest rounded-sm transition-all flex items-center justify-center gap-2 border border-navy-dark hover:border-gold cursor-pointer"
-                >
-                  <Edit3 size={14} />
-                  แก้ไขวิดีโอนี้ 🎥
-                </button>
-              </div>
+              {isLoggedIn && (
+                <div className="border-t border-slate-200 pt-6 space-y-3">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block font-sans">เปิดโหมดผู้ดูแลเพื่อแก้ไข</span>
+                  <button
+                    onClick={() => {
+                      setIsAdminMode(true);
+                    }}
+                    className="w-full bg-navy-dark hover:bg-gold text-white hover:text-navy-dark py-3.5 text-xs font-bold uppercase tracking-widest rounded-sm transition-all flex items-center justify-center gap-2 border border-navy-dark hover:border-gold cursor-pointer"
+                  >
+                    <Edit3 size={14} />
+                    แก้ไขวิดีโอนี้ 🎥
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="space-y-5 flex flex-col justify-between h-full">

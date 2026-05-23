@@ -6,7 +6,10 @@ import {
   Award, 
   Clock, 
   Users, 
-  CheckCircle2 
+  CheckCircle2,
+  Cpu,
+  Boxes,
+  Activity
 } from "lucide-react";
 
 export default function Estimator() {
@@ -55,6 +58,210 @@ export default function Estimator() {
 
   const { minVal, maxVal } = calculateBudget();
 
+  const renderLiveBlueprint = () => {
+    const isPremium = calcQuality === "premium";
+    const smartLabel = calcSmartSystems ? "ACTIVE [YES]" : "INACTIVE";
+    const energyLoad = Math.round(calcArea * 0.14 * (isPremium ? 1.25 : 1.0));
+    
+    // Custom styles for flowing dots along lines
+    const flowStyle = {
+      animation: "flow-dash 1.4s linear infinite"
+    };
+
+    return (
+      <div className="w-full bg-navy-light/40 border border-white/10 p-3.5 rounded-sm font-mono text-[9px] relative overflow-hidden space-y-3.5 shadow-inner">
+        {/* Infinite CSS Keyframe actions */}
+        <style>{`
+          @keyframes flow-dash {
+            to {
+              stroke-dashoffset: -20;
+            }
+          }
+          @keyframes radar-pulse {
+            0% { r: 2px; opacity: 0.8; }
+            100% { r: 9px; opacity: 0; }
+          }
+        `}</style>
+
+        {/* Dynamic Matrix-like backdrop Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(197,160,89,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(197,160,89,0.012)_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none"></div>
+
+        {/* Telemetry control header */}
+        <div className="flex justify-between items-center text-slate-400 border-b border-white/5 pb-1.5 relative z-10">
+          <span className="text-gold/95 animate-pulse font-bold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold inline-block"></span>
+            {calcType === "electrical" ? "SYSTEM_SLD_SCHEMATIC" : "STRUCTURAL_3D_BIM"}
+          </span>
+          <span className="text-[8px] opacity-80">SCALE: 1:{(calcArea < 500 ? 50 : 250).toLocaleString()} &bull; SYS: OK</span>
+        </div>
+
+        {/* Live Vector Blueprint Representation */}
+        <div className="h-32 w-full flex items-center justify-center bg-black/25 border border-white/5 relative z-10 rounded overflow-hidden">
+          {calcType === "electrical" ? (
+            /* ELECTRICS & MECHANICAL SUBSTATION SCHEMATIC */
+            <svg className="w-full h-full p-2" viewBox="0 0 300 100" fill="none" stroke="currentColor">
+              {/* Busbar Line */}
+              <line x1="10" y1="50" x2="290" y2="50" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+              <line x1="10" y1="50" x2="290" y2="50" stroke="#C5A059" strokeWidth="1.5" strokeDasharray="6, 4" style={flowStyle} />
+
+              {/* Feed station - Transformer Coil */}
+              <rect x="25" y="25" width="45" height="50" rx="1.5" fill="#0A0F1D" stroke="#C5A059" strokeWidth="1.2" />
+              <text x="47.5" y="44" fill="#C5A059" textAnchor="middle" fontSize="6" fontWeight="bold">22 KV</text>
+              <text x="47.5" y="60" fill="rgba(255,255,255,0.6)" textAnchor="middle" fontSize="5.5">PRIMARY</text>
+
+              {/* Induction loops visual overlay */}
+              <circle cx="47.5" cy="50" r="10" stroke="#C5A059" strokeWidth="1" strokeDasharray="2, 3" />
+
+              {/* Main Distribution Panel (MDB) */}
+              <rect x="125" y="25" width="50" height="50" rx="1.5" fill="#0A0F1D" stroke="#C5A059" strokeWidth="1.2" />
+              <text x="150" y="44" fill="#C5A059" textAnchor="middle" fontSize="6.5" fontWeight="bold">MDB PANEL</text>
+              <text x="150" y="60" fill="rgba(255,255,255,0.7)" textAnchor="middle" fontSize="5.5">{energyLoad} KVA LOAD</text>
+
+              {/* Electrical Flow Conduit Loop lines */}
+              <path d="M 150 25 L 150 14 L 235 14 L 235 45" stroke="#C5A059" strokeWidth="1" strokeDasharray="5, 3" style={flowStyle} />
+
+              {/* Load distribution terminal box */}
+              <rect x="215" y="45" width="40" height="20" rx="1" fill="#0A0F1D" stroke={isPremium ? "#10B981" : "#C5A059"} strokeWidth="1.2" />
+              <text x="235" y="57" fill="#FFFFFF" textAnchor="middle" fontSize="5.5">FEEDER_A</text>
+
+              <circle cx="275" cy="50" r="3" fill="#C5A059" />
+              <circle cx="275" cy="50" r="8" stroke="#C5A059" strokeWidth="1.2" style={{ animation: "radar-pulse 1.8s infinite" }} />
+            </svg>
+          ) : calcType === "factory" ? (
+            /* INDUSTRIAL STRUCTURAL FACTORY PORTAL BLUEPRINT */
+            <svg className="w-full h-full p-2" viewBox="0 0 300 100" fill="none" stroke="currentColor">
+              {/* Foundation Horizon Line */}
+              <line x1="10" y1="85" x2="290" y2="85" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+              
+              {/* Concrete Pad foundation floor */}
+              <rect x="25" y="80" width="250" height="5" fill="rgba(197,160,89,0.12)" stroke="#C5A059" strokeWidth="1" />
+              
+              {/* Steel Truss Column Supports */}
+              <line x1="35" y1="80" x2="35" y2="30" stroke="#C5A059" strokeWidth="1.2" />
+              <line x1="115" y1="80" x2="115" y2="30" stroke="#C5A059" strokeWidth="1.2" />
+              <line x1="195" y1="80" x2="195" y2="30" stroke="#C5A059" strokeWidth="1.2" />
+              <line x1="265" y1="80" x2="265" y2="30" stroke="#C5A059" strokeWidth="1.2" />
+
+              {/* Footing Reinforcement Grids representing heavy columns */}
+              <rect x="30" y="85" width="10" height="10" stroke="rgba(197,160,89,0.6)" strokeWidth="0.8" strokeDasharray="2, 2" />
+              <rect x="110" y="85" width="10" height="10" stroke="rgba(197,160,89,0.6)" strokeWidth="0.8" strokeDasharray="2, 2" />
+              <rect x="190" y="85" width="10" height="10" stroke="rgba(197,160,89,0.6)" strokeWidth="0.8" strokeDasharray="2, 2" />
+              <rect x="260" y="85" width="10" height="10" stroke="rgba(197,160,89,0.6)" strokeWidth="0.8" strokeDasharray="2, 2" />
+
+              {/* Sloped Multi-Spaced Metal Sheet Rafter Header */}
+              <polyline points="35,30 75,15 115,30 155,15 195,30 230,15 265,30" stroke="#C5A059" strokeWidth="1.5" />
+              <polyline points="35,25 75,10 115,25 155,10 195,25 230,10 265,25" stroke="rgba(255,255,255,0.15)" strokeWidth="0.8" />
+
+              {/* Bracing wires and tie-rods */}
+              <line x1="35" y1="30" x2="115" y2="80" stroke="rgba(197,160,89,0.25)" strokeWidth="0.8" strokeDasharray="3, 3" />
+              <line x1="115" y1="30" x2="35" y2="80" stroke="rgba(197,160,89,0.25)" strokeWidth="0.8" strokeDasharray="3, 3" />
+              <line x1="195" y1="30" x2="265" y2="80" stroke="rgba(197,160,89,0.25)" strokeWidth="0.8" strokeDasharray="3, 3" />
+              <line x1="265" y1="30" x2="195" y2="80" stroke="rgba(197,160,89,0.25)" strokeWidth="0.8" strokeDasharray="3, 3" />
+
+              {/* Smart system overlay icon indicator */}
+              {calcSmartSystems && (
+                <>
+                  <rect x="40" y="2" width="220" height="5" fill="rgba(16,185,129,0.1)" stroke="#10B981" strokeWidth="0.8" />
+                  <text x="150" y="6" fill="#10B981" textAnchor="middle" fontSize="4.5" fontWeight="black" letterSpacing="0.5">ECO-SOLAR INFRASTRUCTURE ENABLED</text>
+                </>
+              )}
+
+              <text x="150" y="48" fill="rgba(255,255,255,0.5)" textAnchor="middle" fontSize="5.5">PORTAL FRAME CONSTRAINTS</text>
+              <text x="150" y="62" fill="#C5A059" textAnchor="middle" fontSize="6.5" fontWeight="bold">RC PILE FOUNDATIONS SECTOR</text>
+            </svg>
+          ) : calcType === "office" ? (
+            /* HIGH RISE COMMERCIAL MULTI-TIER LAYOUT FRAME */
+            <svg className="w-full h-full p-2" viewBox="0 0 300 100" fill="none" stroke="currentColor">
+              {/* Ground level */}
+              <line x1="10" y1="90" x2="290" y2="90" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+              
+              {/* Outer structural envelope */}
+              <rect x="90" y="10" width="120" height="80" stroke="#C5A059" strokeWidth="1.5" fill="rgba(10,15,29,0.5)" />
+              
+              {/* Vertical core pillars */}
+              <line x1="120" y1="10" x2="120" y2="90" stroke="#C5A059" strokeWidth="1" strokeDasharray="1, 2" />
+              <line x1="150" y1="10" x2="150" y2="90" stroke="#C5A059" strokeWidth="1.2" strokeDasharray="2, 2" />
+              <line x1="180" y1="10" x2="180" y2="90" stroke="#C5A059" strokeWidth="1" strokeDasharray="1, 2" />
+
+              {/* Horizontal floors elevations */}
+              <line x1="90" y1="26" x2="210" y2="26" stroke="#C5A059" strokeWidth="0.8" />
+              <line x1="90" y1="42" x2="210" y2="42" stroke="#C5A059" strokeWidth="0.8" />
+              <line x1="90" y1="58" x2="210" y2="58" stroke="#C5A059" strokeWidth="0.8" />
+              <line x1="90" y1="74" x2="210" y2="74" stroke="#C5A059" strokeWidth="0.8" />
+
+              {/* Intelligent airflow system conduits */}
+              {calcSmartSystems && (
+                <path d="M 85 90 L 85 16 L 215 16 L 215 90" stroke="#10B981" strokeWidth="1" strokeDasharray="6, 4" style={flowStyle} />
+              )}
+
+              {/* Geometric side wires linking structure */}
+              <line x1="40" y1="90" x2="90" y2="74" stroke="rgba(197,160,89,0.3)" strokeWidth="0.8" strokeDasharray="2, 3" />
+              <line x1="260" y1="90" x2="210" y2="74" stroke="rgba(197,160,89,0.3)" strokeWidth="0.8" strokeDasharray="2, 3" />
+
+              <text x="45" y="45" fill="rgba(255,255,255,0.5)" textAnchor="left" fontSize="5.5">OFFICE_ELEV</text>
+              <text x="45" y="55" fill="#C5A059" textAnchor="left" fontSize="6.5" fontWeight="bold">STRUCTURAL</text>
+              <text x="255" y="45" fill="rgba(255,255,255,0.5)" textAnchor="right" fontSize="5.5">SMART_HVAC</text>
+              <text x="255" y="55" fill={calcSmartSystems ? "#10B981" : "#C5A059"} textAnchor="right" fontSize="6" fontWeight="bold">
+                {calcSmartSystems ? "STABLE_OK" : "STANDBY"}
+              </text>
+            </svg>
+          ) : (
+            /* COMMERCIAL INTERIOR PLAN & PARTITIONS BLUEPRINT */
+            <svg className="w-full h-full p-2" viewBox="0 0 300 100" fill="none" stroke="currentColor">
+              {/* Main property perimeter wall */}
+              <rect x="25" y="10" width="250" height="80" stroke="#C5A059" strokeWidth="1.5" fill="rgba(10,15,29,0.4)" />
+              
+              {/* Inner building segment dividers */}
+              <line x1="105" y1="10" x2="105" y2="65" stroke="#C5A059" strokeWidth="1.2" />
+              <line x1="175" y1="35" x2="175" y2="90" stroke="#C5A059" strokeWidth="1.2" />
+              <line x1="105" y1="65" x2="145" y2="65" stroke="#C5A059" strokeWidth="1.2" />
+
+              {/* Dynamic decorative light grid mapping layout */}
+              <circle cx="140" cy="38" r="14" stroke="rgba(197,160,89,0.3)" strokeWidth="1" strokeDasharray="6, 3" />
+              
+              {/* Socket terminal markers */}
+              <circle cx="55" cy="30" r="2.5" fill="#C5A059" />
+              <circle cx="140" cy="38" r="2.5" fill="#C5A059" />
+              <circle cx="225" cy="50" r="2.5" fill="#C5A059" />
+              <circle cx="225" cy="74" r="2.5" fill="#C5A059" />
+
+              {/* Cable conduit paths representation */}
+              <path d="M 55 30 L 105 30 L 140 38 L 175 50 L 225 50 L 225 74" stroke="rgba(197,160,89,0.45)" strokeWidth="1" strokeDasharray="5, 4" style={flowStyle} />
+
+              <text x="55" y="21" fill="rgba(255,255,255,0.45)" textAnchor="middle" fontSize="5.5">ZONE_1</text>
+              <text x="140" y="21" fill="rgba(255,255,255,0.45)" textAnchor="middle" fontSize="5.5">CEILING DOME</text>
+              <text x="225" y="41" fill="rgba(255,255,255,0.45)" textAnchor="middle" fontSize="5.5">ZONE_2</text>
+
+              <text x="150" y="82" fill="#C5A059" textAnchor="middle" fontSize="6" fontWeight="bold">INTERIOR LAYOUT ELECTRICAL WIRING OUTLINE</text>
+            </svg>
+          )}
+        </div>
+
+        {/* Telemetry output box readings */}
+        <div className="grid grid-cols-3 gap-2 text-slate-400 text-[8px] bg-black/15 p-2 border border-white/5 rounded relative z-10">
+          <div>
+            <span className="text-slate-500 block uppercase tracking-wider">EST. VOLTAGE</span>
+            <span className="text-white font-semibold font-mono">
+              {calcType === "electrical" ? "22 kV Bus-Drop" : "380 Volts (3-Phase)"}
+            </span>
+          </div>
+          <div>
+            <span className="text-slate-500 block uppercase tracking-wider font-mono">CU CONDUCTOR</span>
+            <span className="text-white font-semibold font-mono">
+              {isPremium ? "XLPE Heavy Insulated" : "Standard PVC Flame-Ret."}
+            </span>
+          </div>
+          <div>
+            <span className="text-slate-500 block uppercase tracking-wider font-mono">SMART CONTROLS</span>
+            <span className={calcSmartSystems ? "text-emerald-400 font-bold font-mono" : "text-slate-400 font-mono"}>
+              {smartLabel}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section className="py-24 bg-slate-50 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-6">
@@ -67,7 +274,7 @@ export default function Estimator() {
               วิเคราะห์งบประมาณ <br />
               <span className="text-gold">และแผนวิศวกรรมเฉพาะทาง</span>
             </h2>
-            <p className="text-slate-500 font-light text-sm max-w-2xl leading-relaxed">
+            <p className="text-slate-500 font-light text-sm max-w-2xl leading-relaxed font-sans">
               เลือกความต้องการเพื่อคำนวณราคาประเมินค่าแรงพร้อมระยะเวลาดำเนินงานเบื้องต้นโดยอัตโนมัติ มอบความแม่นยำด้านงบประมาณสำหรับธุรกิจคุณเพื่อเตรียมงานร่วมกับวิศวกรผู้เชี่ยวชาญ
             </p>
           </div>
@@ -161,6 +368,7 @@ export default function Estimator() {
                 </span>
                 <div className="grid grid-cols-2 gap-2">
                   <button
+                    key="standard"
                     type="button"
                     onClick={() => setCalcQuality("standard")}
                     className={`p-3 text-center border text-[11px] font-bold rounded-sm transition-all cursor-pointer ${
@@ -172,6 +380,7 @@ export default function Estimator() {
                     Standard Grade
                   </button>
                   <button
+                    key="premium"
                     type="button"
                     onClick={() => setCalcQuality("premium")}
                     className={`p-3 text-center border text-[11px] font-bold rounded-sm transition-all cursor-pointer ${
@@ -196,7 +405,7 @@ export default function Estimator() {
                     onChange={(e) => setCalcSmartSystems(e.target.checked)}
                     className="rounded accent-gold w-4 h-4 cursor-pointer"
                   />
-                  <span className="text-[11px] font-bold text-slate-705 select-none font-medium">
+                  <span className="text-[11px] font-bold text-slate-700 select-none font-medium text-slate-800">
                     ติดตั้งระบบควบคุมอัจฉริยะ (Eco-Solar / Smart HVAC)
                   </span>
                 </label>
@@ -210,46 +419,49 @@ export default function Estimator() {
             
             <div className="space-y-6 relative z-10">
               <div className="flex justify-between items-center border-b border-white/10 pb-4">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gold font-mono flex items-center gap-1.5">
-                  <Award size={12} className="text-gold" /> Result: ประมาณงบเพื่อจับคู่ทางวิศวกรรม
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gold font-mono flex items-center gap-1.5 font-black">
+                  <Award size={12} className="text-gold animate-bounce" /> RESULT: แผนวิศวกรรมเฉพาะแบบจำลอง
                 </span>
-                <span className="text-[10px] bg-gold/10 text-gold border border-gold/30 px-2 py-0.5 font-mono rounded">
-                  Live Estimate
+                <span className="text-[10px] bg-gold/10 text-gold border border-gold/30 px-2.5 py-0.5 font-mono rounded font-bold animate-pulse">
+                  STATION ACTIVE
                 </span>
               </div>
 
-              <div className="py-2">
+              <div className="py-1">
                 <p className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">
-                  ช่วงประมาณการงบประมาณรวมเบื้องต้น:
+                  ช่วงประเมินราคาวัสดุร่วมค่าแรงคร่าวๆ:
                 </p>
-                <div className="relative h-20 flex items-baseline">
+                <div className="relative h-18 flex items-baseline">
                   {calcIsUpdating ? (
                     <div className="text-gold/60 text-xs italic animate-pulse py-4 font-mono">
-                      กำลังประมวลสัญญาณจำลองราคา...
+                      กำลังคำนวณราคาจำลอง...
                     </div>
                   ) : (
                     <motion.div 
                       key={`${calcType}-${calcArea}-${calcQuality}-${calcSmartSystems}`}
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="space-y-1"
+                      className="space-y-0"
                     >
-                      <span className="text-3xl md:text-3.5xl font-black text-gold font-display tracking-tight">
+                      <span className="text-2xl md:text-3xl font-black text-gold font-display tracking-tight leading-none block">
                         {`${minVal.toLocaleString()} - ${maxVal.toLocaleString()}`}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-bold tracking-normal block leading-normal mt-1">
-                        บาท (THB) *ราคารวมอุปกรณ์และแรงงานที่มีวิศวกรวิชาชีพควบคุมทุกขั้นตอน
+                      <span className="text-[9.5px] text-slate-400 font-medium tracking-normal block leading-normal pt-1.5">
+                        บาท (THB) *ราคารองรับมาตรฐานวิชาชีพวิศวกรควบคุม
                       </span>
                     </motion.div>
                   )}
                 </div>
               </div>
 
+              {/* Live Interactive Blueprint Terminal Schema widget */}
+              {renderLiveBlueprint()}
+
               {/* Operational stats */}
-              <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-6">
+              <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-4">
                 <div className="space-y-1">
                   <span className="text-[9px] uppercase tracking-wider text-slate-400 flex items-center gap-1 font-mono">
-                    <Clock size={11} className="text-gold" /> ระยะเวลาก่อสร้างหลักโดยประเมิน
+                    <Clock size={11} className="text-gold" /> ระยะเวลาก่อสร้างโดยประมาณ
                   </span>
                   <span className="text-sm font-black text-white block">
                     ประมาณ {Math.max(30, Math.round(45 + (calcArea * 0.08) * (calcQuality === "premium" ? 1.15 : 0.95)))} วัน
@@ -260,45 +472,45 @@ export default function Estimator() {
                     <Users size={11} className="text-gold" /> บุคลากร/วิศวกรขั้นต่ำ
                   </span>
                   <span className="text-sm font-black text-white block text-slate-200">
-                    {Math.max(4, Math.round(5 + (calcArea * 0.005)))} คนสแตนด์บายประจําจุด
+                    {Math.max(4, Math.round(5 + (calcArea * 0.005)))} คนสแตนด์บายในงาน
                   </span>
                 </div>
               </div>
 
               {/* Milestones dynamic checker status */}
-              <div className="space-y-2 border-t border-white/5 pt-6">
-                <span className="text-[9px] text-slate-400 uppercase tracking-widest font-mono block">แผนและหลักประกันความปลอดภัยในพื้นที่:</span>
-                <div className="space-y-2 text-[10px]">
+              <div className="space-y-2 border-t border-white/5 pt-4">
+                <span className="text-[9px] text-slate-400 uppercase tracking-widest font-mono block">ลำดับกระบวนการมาตรฐาน NP Conduction:</span>
+                <div className="space-y-1.5 text-[9.5px]">
                   <div className="flex items-center gap-2 text-emerald-400">
-                    <CheckCircle2 size={12} className="flex-shrink-0" />
-                    <span>ออกแบบโครงสร้าง / ขึ้นผัง 3D (CAD/BIM Level)</span>
+                    <CheckCircle2 size={11} className="flex-shrink-0" />
+                    <span>วิเคราะห์สเปซขึ้นโครงสร้าง / ร่างแบบ 3D BIM AutoCAD</span>
                   </div>
                   <div className="flex items-center gap-2 text-emerald-400">
-                    <CheckCircle2 size={12} className="flex-shrink-0" />
-                    <span>โครงสร้างฐานรากเสาคานมั่นคงคัดส่วนผสมคอนกรีตคุณภาพสูง</span>
+                    <CheckCircle2 size={11} className="flex-shrink-0" />
+                    <span>วางรากฐานโครงสร้างเหล็กกล้าและคอนกรีตทนแรงดัดสูง (RC)</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-300">
-                    <CheckCircle2 size={12} className="text-gold flex-shrink-0 animate-pulse" />
-                    <span>{calcType === "electrical" ? "ตรวจสอบและวางตู้เดินไฟหลัก MDB ไซต์งาน" : "งานก่อสร้างโครงสร้าง และระบบวิศวกรรมโยธาและงานสถาปัตย์"}</span>
+                    <CheckCircle2 size={11} className="text-gold flex-shrink-0 animate-pulse" />
+                    <span>{calcType === "electrical" ? "ตรวจสอบตู้ควบคุมไฟหลัก MDB และสายดินเฟส" : "ก่อสร้าง ดำเนินประปาโยธา และระบบส่องสว่าง"}</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-500">
-                    <div className="w-3 h-3 rounded-full border border-white/20 flex items-center justify-center text-[8px] flex-shrink-0 font-bold">4</div>
-                    <span>ส่งใบประเมินมาตรฐานวิชาชีพวิศวกรส่งมอบโครงสร้าง QA</span>
+                    <div className="w-3.5 h-3.5 rounded-full border border-white/20 flex items-center justify-center text-[7.5px] flex-shrink-0 font-bold font-mono">4</div>
+                    <span>ผ่านการตรวจมาตรฐานสิ่งแวดล้อมและใบส่งงานวิชาชีพวิศวกร</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-white/5 relative z-10 flex flex-col gap-3">
+            <div className="pt-4 border-t border-white/5 relative z-10 flex flex-col gap-2.5">
               <button
                 type="button"
                 onClick={handleSendToContact}
-                className="w-full bg-gold hover:bg-gold-hover text-navy-dark py-4 text-[10px] font-mono font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 rounded-sm cursor-pointer shadow-lg hover:shadow-gold/10"
+                className="w-full bg-gold hover:bg-gold-hover text-navy-dark py-3.5 text-[10px] font-mono font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-1.5 rounded-sm cursor-pointer shadow-lg hover:shadow-gold/15"
               >
-                🚀 ส่งผลจำลองนี้ไปยังช่องติดต่อเพื่อปรึกษาวิศวกรทันที
+                🚀 ส่งใบจำลองนี้เพื่อปรึกษาวิศวกรผู้เชี่ยวชาญทันที
               </button>
-              <p className="text-[8px] text-slate-400 text-center font-sans tracking-tight leading-relaxed">
-                *ผลคำนวณเบื้องต้นเพื่ออำนวยความสะดวกในการวางแผน งบและเวลาจริงขึ้นอยู่กับตารางงานและการเข้าสำรวจสภาพหน้างานจริงค่ะ
+              <p className="text-[7.5px] text-slate-400 text-center font-sans tracking-tight leading-relaxed">
+                *ผลประเมินคร่าวๆ นำเสนอเพื่อเป็นแนวทางการวางแผน โดยสัญญางบและการวางกรอบเวลาสมบูรณ์จะอ้างอิงหลังจากวิศวกรประเมินและสำรวจไซต์งานจริงเรียบร้อยแล้วค่ะ
               </p>
             </div>
           </div>

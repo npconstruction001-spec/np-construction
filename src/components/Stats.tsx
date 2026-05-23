@@ -5,7 +5,7 @@ export default function Stats() {
   const stats = [
     { value: "40+", label: "Completed Projects" },
     { value: "50+", label: "Experienced Staffs" },
-    { value: "100%", label: "Clients Satifsaction" },
+    { value: "100%", label: "Clients Satisfaction" },
     { value: "0", label: "Accident Rate" },
   ];
 

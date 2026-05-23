@@ -82,9 +82,9 @@ export default function Header({
             )}
             <a
               href="#contact"
-              className="bg-gold text-navy-dark px-6 py-2.5 text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-gold-hover transition-all shadow-lg font-mono"
+              className="bg-gold text-navy-dark px-5 py-3 text-xs font-bold rounded-sm hover:bg-gold-hover transition-all shadow-md font-sans"
             >
-              Request Quote
+              ขอใบเสนอราคา / ติดต่อประสานงานโครงการ
             </a>
           </div>
 
@@ -147,10 +147,10 @@ export default function Header({
                 )}
                 <a
                   href="#contact"
-                  className="bg-gold text-navy-dark py-4 rounded-sm font-bold text-center text-sm uppercase tracking-wider"
+                  className="bg-gold text-navy-dark py-4 rounded-sm font-bold text-center text-sm"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  ขอใบเสนอราคา
+                  ขอใบเสนอราคา / ติดต่อประสานงานโครงการ
                 </a>
               </div>
             </div>

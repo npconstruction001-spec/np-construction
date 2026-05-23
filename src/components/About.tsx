@@ -48,8 +48,8 @@ export default function About({
               />
             </div>
             <div className="absolute -top-12 -left-12 z-20 bg-gold text-navy-dark p-10 shadow-2xl">
-              <span className="block text-5xl font-black tracking-tighter font-display">15+</span>
-              <span className="mono-label text-navy-dark/70">Expert Years</span>
+              <span className="block text-5xl font-black tracking-tighter font-display">10+</span>
+              <span className="mono-label text-navy-dark/70 text-[9px] font-bold uppercase tracking-widest block mt-1">YEARS OF EXCELLENCE</span>
             </div>
           </motion.div>
 

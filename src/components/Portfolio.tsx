@@ -5,9 +5,11 @@ import {
   X, 
   UploadCloud, 
   CheckCircle2, 
-  Plus 
+  Plus,
+  RotateCcw
 } from "lucide-react";
 import { Project } from "../types";
+import { PORTFOLIO } from "../constants/data";
 
 interface PortfolioProps {
   isAdminMode: boolean;
@@ -25,6 +27,18 @@ export default function Portfolio({
   const [selectedProjectIdx, setSelectedProjectIdx] = useState<number | null>(null);
   const [activeGalleryIdx, setActiveGalleryIdx] = useState<number>(0);
   const [confirmDeleteIdx, setConfirmDeleteIdx] = useState<number | null>(null);
+  const [activeFilter, setActiveFilter] = useState<string>("ทั้งหมด");
+
+  const categories = [
+    "ทั้งหมด",
+    "งานโครงการภาครัฐ/ราชการ",
+    "งานอาคารและโครงสร้างเอกชน",
+    "งานระบบวิศวกรรมและไฟฟ้า"
+  ];
+
+  const filteredPortfolio = activeFilter === "ทั้งหมด"
+    ? portfolio
+    : portfolio.filter((item) => item.category === activeFilter);
 
   const handleOpenProject = (idx: number) => {
     setSelectedProjectIdx(idx);
@@ -46,7 +60,7 @@ export default function Portfolio({
   const handleAddProject = () => {
     const newProj: Project = {
       title: "โครงการติดตั้งระบบหม้อแปลงไฟฟ้าใหม่ " + (portfolio.length + 1),
-      category: "ระบบไฟฟ้าและเครื่องกล",
+      category: activeFilter !== "ทั้งหมด" ? activeFilter : "งานระบบวิศวกรรมและไฟฟ้า",
       image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600",
       fallback: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600",
       details: "รายละเอียดโครงการและงานวิศวกรรมเฉพาะตัวแบบยั่งยืน...",
@@ -77,7 +91,7 @@ export default function Portfolio({
   return (
     <section id="portfolio" className="py-32 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="editorial-grid gap-12 mb-16">
+        <div className="editorial-grid gap-12 mb-12">
           <div className="col-span-12 lg:col-span-6 space-y-4">
             <span className="label-small text-gold uppercase tracking-widest font-mono flex items-center gap-2">
               <Briefcase size={14} /> LIVE CONSTRUCTION PORTAL
@@ -92,72 +106,110 @@ export default function Portfolio({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {portfolio.map((proj, idx) => (
-            <div
-              key={idx}
-              onClick={() => handleOpenProject(idx)}
-              className="group aspect-square bg-[#050C18] relative overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer border border-white/5 rounded-sm"
+        {/* Category Filters Grid */}
+        <div className="flex flex-wrap gap-2 mb-12 border-b border-slate-100 pb-6">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveFilter(cat)}
+              className={`px-5 py-3 text-xs font-bold rounded-sm transition-all tracking-wide ${
+                activeFilter === cat
+                  ? "bg-navy-dark text-white shadow-md shadow-navy-dark/15 font-semibold"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-navy-dark cursor-pointer font-medium"
+              }`}
             >
-              <img
-                src={proj.image || proj.fallback}
-                alt={proj.title}
-                referrerPolicy="no-referrer"
-                className="absolute inset-0 w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/30 to-transparent z-10 transition-opacity group-hover:opacity-90"></div>
-              
-              {/* Interactive Hint Badge */}
-              <div className="absolute top-4 left-4 z-20 bg-gold/90 text-navy-dark text-[9px] font-mono font-black uppercase tracking-widest px-2.5 py-1.5 rounded-sm opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300 flex items-center gap-1">
-                <span>🔍 ดูรายละเอียด & รูปงาน</span>
-              </div>
+              {cat}
+            </button>
+          ))}
+        </div>
 
-              <div className="relative z-20 p-6 flex flex-col justify-end h-full">
-                <span className="text-[10px] text-gold font-mono uppercase tracking-widest">{proj.category}</span>
-                <h3 className="text-sm font-bold text-white uppercase mt-1 leading-tight line-clamp-2">{proj.title}</h3>
-              </div>
+        {filteredPortfolio.length === 0 ? (
+          <div className="text-center py-24 border border-dashed border-slate-200 rounded-sm bg-slate-50">
+            <p className="text-slate-400 text-sm font-sans">ไม่พบรายการผลงานในหมวดหมู่นี้</p>
+            {isAdminMode && (
+              <button
+                type="button"
+                onClick={handleAddProject}
+                className="mt-4 bg-navy-dark text-white px-5 py-2.5 text-xs font-bold rounded-sm hover:bg-navy-light transition-all cursor-pointer"
+              >
+                เพิ่มโครงการในหมวดหมู่นี้ +
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {filteredPortfolio.map((proj, idx) => {
+              // Map back to original index in portfolio array to keep editing and deleting consistent
+              const targetIdx = portfolio.findIndex((p) => p.title === proj.title);
+              const originalIdx = targetIdx !== -1 ? targetIdx : idx;
 
-              {/* Admin actions inside the project card */}
-              {isAdminMode && (
-                <div className="absolute top-4 right-4 z-30" onClick={(e) => e.stopPropagation()}>
-                  {confirmDeleteIdx === idx ? (
-                    <div className="bg-red-605 text-white p-2 rounded-sm text-[10px] font-bold flex flex-col gap-1 shadow-lg bg-red-600">
-                      <span>ลบรายการนี้?</span>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={(e) => handleDeleteProject(e, idx)}
-                          className="bg-white text-red-650 px-1.5 py-0.5 rounded-sm font-bold cursor-pointer text-red-600"
-                        >
-                          ลบ
-                        </button>
+              return (
+                <div
+                  key={idx}
+                  onClick={() => handleOpenProject(originalIdx)}
+                  className="group aspect-square bg-[#050C18] relative overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer border border-white/5 rounded-sm"
+                >
+                  <img
+                    src={proj.image || proj.fallback}
+                    alt={proj.title}
+                    referrerPolicy="no-referrer"
+                    className="absolute inset-0 w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/30 to-transparent z-10 transition-opacity group-hover:opacity-90"></div>
+                  
+                  {/* Interactive Hint Badge */}
+                  <div className="absolute top-4 left-4 z-20 bg-gold/90 text-navy-dark text-[9px] font-mono font-black uppercase tracking-widest px-2.5 py-1.5 rounded-sm opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300 flex items-center gap-1">
+                    <span>🔍 ดูรายละเอียด & รูปงาน</span>
+                  </div>
+
+                  <div className="relative z-20 p-6 flex flex-col justify-end h-full">
+                    <span className="text-[10px] text-gold font-mono uppercase tracking-widest">{proj.category}</span>
+                    <h3 className="text-sm font-bold text-white uppercase mt-1 leading-tight line-clamp-2">{proj.title}</h3>
+                  </div>
+
+                  {/* Admin actions inside the project card */}
+                  {isAdminMode && (
+                    <div className="absolute top-4 right-4 z-30" onClick={(e) => e.stopPropagation()}>
+                      {confirmDeleteIdx === originalIdx ? (
+                        <div className="bg-red-605 text-white p-2 rounded-sm text-[10px] font-bold flex flex-col gap-1 shadow-lg bg-red-600">
+                          <span>ลบรายการนี้?</span>
+                          <div className="flex gap-1">
+                            <button
+                              onClick={(e) => handleDeleteProject(e, originalIdx)}
+                              className="bg-white text-red-650 px-1.5 py-0.5 rounded-sm font-bold cursor-pointer text-red-600"
+                            >
+                              ลบ
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setConfirmDeleteIdx(null);
+                              }}
+                              className="bg-red-800 text-white px-1.5 py-0.5 rounded-sm cursor-pointer"
+                            >
+                              ยกเลิก
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            setConfirmDeleteIdx(null);
+                            setConfirmDeleteIdx(originalIdx);
                           }}
-                          className="bg-red-800 text-white px-1.5 py-0.5 rounded-sm cursor-pointer"
+                          className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full cursor-pointer transition-colors shadow-sm flex items-center justify-center"
+                          title="ลบผลงานนี้"
                         >
-                          ยกเลิก
+                          ❌
                         </button>
-                      </div>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setConfirmDeleteIdx(idx);
-                      }}
-                      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full cursor-pointer transition-colors shadow-sm flex items-center justify-center"
-                      title="ลบผลงานนี้"
-                    >
-                      ❌
-                    </button>
                   )}
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Dynamic Interactive Project Detail Modal */}
         <AnimatePresence>
@@ -456,13 +508,28 @@ export default function Portfolio({
         </AnimatePresence>
 
         {isAdminMode && (
-          <div className="mt-12 flex justify-center">
+          <div className="mt-12 flex flex-col sm:flex-row justify-center items-center gap-4">
             <button
               type="button"
               onClick={handleAddProject}
               className="bg-navy-dark text-white hover:bg-gold hover:text-navy-dark border border-gold/40 hover:border-gold px-8 py-4.5 text-xs font-bold uppercase tracking-widest rounded transition-all flex items-center gap-2 shadow-2xl cursor-pointer"
             >
               <Plus size={16} /> ADD NEW PROJECT (เพิ่มโครงการใหม่)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm("คุณต้องการคืนค่าผลงานทั้งหมดกลับเป็นค่าเริ่มต้นหรือไม่? ข้อมูลแก้ไขก่อนหน้าจะถูกเลือกทดแทนใหม่ทั้งหมดค่ะ")) {
+                  setPortfolio(PORTFOLIO);
+                  localStorage.setItem("np_portfolio_data", JSON.stringify(PORTFOLIO));
+                  setActiveFilter("ทั้งหมด");
+                  triggerSavedToast();
+                }
+              }}
+              className="bg-red-900/10 border border-red-550/25 hover:bg-red-950 hover:border-red-500 text-red-500 hover:text-white px-8 py-4.5 text-xs font-bold uppercase tracking-widest rounded transition-all flex items-center gap-2 shadow-2xl cursor-pointer border-solid"
+              title="กู้คืนข้อมูลหน้าผลงานเริ่มต้นจากไฟล์ระบบเพื่อแก้ปัญหางานหาย"
+            >
+              <RotateCcw size={16} /> RESTORE DEFAULTS (กู้คืนผลงานดั้งเดิม)
             </button>
           </div>
         )}

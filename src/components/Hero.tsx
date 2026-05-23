@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import { imgBannerLeft, imgBannerRight } from "../constants/data";
 
@@ -29,6 +29,212 @@ export default function Hero({
   triggerSavedToast,
   setIsAdminMode,
 }: HeroProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let width = (canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth);
+    let height = (canvas.height = canvas.parentElement?.offsetHeight || window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
+      height = canvas.height = canvas.parentElement?.offsetHeight || window.innerHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    // Grid coordinates representation for electric nodes
+    interface ElectricNode {
+      x: number;
+      y: number;
+      pulseOffset: number;
+      connections: number[];
+    }
+
+    const nodes: ElectricNode[] = [];
+    const nodeCount = 14;
+
+    // Distribute nodes coordinates logically
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        pulseOffset: Math.random() * Math.PI * 2,
+        connections: [],
+      });
+    }
+
+    // Trace circuit connection paths (horizontal & vertical joints)
+    for (let i = 0; i < nodes.length; i++) {
+      const current = nodes[i];
+      const itemsSorted = nodes
+        .map((n, idx) => ({ idx, dist: Math.hypot(n.x - current.x, n.y - current.y) }))
+        .filter((item) => item.idx !== i)
+        .sort((a, b) => a.dist - b.dist);
+
+      for (let k = 0; k < Math.min(2, itemsSorted.length); k++) {
+        const closestIdx = itemsSorted[k].idx;
+        if (!current.connections.includes(closestIdx) && !nodes[closestIdx].connections.includes(i)) {
+          current.connections.push(closestIdx);
+        }
+      }
+    }
+
+    // Floating electrons moving on circuit traces
+    interface Electron {
+      fromIdx: number;
+      toIdx: number;
+      progress: number;
+      speed: number;
+    }
+
+    const electrons: Electron[] = [];
+    const maxElectrons = 8;
+
+    for (let i = 0; i < maxElectrons; i++) {
+      const fromIdx = Math.floor(Math.random() * nodes.length);
+      const node = nodes[fromIdx];
+      if (node && node.connections.length > 0) {
+        const toIdx = node.connections[Math.floor(Math.random() * node.connections.length)];
+        electrons.push({
+          fromIdx,
+          toIdx,
+          progress: Math.random(),
+          speed: Math.random() * 0.004 + 0.002,
+        });
+      }
+    }
+
+    let mouseX = -1000;
+    let mouseY = -1000;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    };
+
+    const handleMouseLeave = () => {
+      mouseX = -1000;
+      mouseY = -1000;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
+
+    let tick = 0;
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+      tick += 0.015;
+
+      // Draw modern L-joint conductive lines
+      ctx.strokeStyle = "rgba(197, 160, 89, 0.12)";
+      ctx.lineWidth = 1;
+      
+      nodes.forEach((node) => {
+        node.connections.forEach((connIdx) => {
+          const target = nodes[connIdx];
+          if (!target) return;
+          ctx.beginPath();
+          ctx.moveTo(node.x, node.y);
+          const midX = node.x + (target.x - node.x) / 2;
+          ctx.lineTo(midX, node.y);
+          ctx.lineTo(midX, target.y);
+          ctx.lineTo(target.x, target.y);
+          ctx.stroke();
+        });
+      });
+
+      // Update & render flowing electrons
+      electrons.forEach((el) => {
+        el.progress += el.speed;
+        if (el.progress >= 1) {
+          el.progress = 0;
+          el.fromIdx = el.toIdx;
+          const currentNode = nodes[el.fromIdx];
+          if (currentNode && currentNode.connections.length > 0) {
+            el.toIdx = currentNode.connections[Math.floor(Math.random() * currentNode.connections.length)];
+          } else {
+            // fallback if stuck
+            el.fromIdx = Math.floor(Math.random() * nodes.length);
+            const fallbackNode = nodes[el.fromIdx];
+            if (fallbackNode && fallbackNode.connections.length > 0) {
+              el.toIdx = fallbackNode.connections[Math.floor(Math.random() * fallbackNode.connections.length)];
+            }
+          }
+        }
+
+        const start = nodes[el.fromIdx];
+        const end = nodes[el.toIdx];
+        if (start && end) {
+          const midX = start.x + (end.x - start.x) / 2;
+          let elX = start.x;
+          let elY = start.y;
+          
+          if (el.progress < 0.5) {
+            const ratio = el.progress * 2;
+            elX = start.x + (midX - start.x) * ratio;
+            elY = start.y;
+          } else {
+            const ratio = (el.progress - 0.5) * 2;
+            elX = midX + (end.x - midX) * ratio;
+            elY = start.y + (end.y - start.y) * ratio;
+          }
+
+          // Render glowing sphere representing conduction electron
+          ctx.beginPath();
+          const dotRadius = Math.sin(tick * 8 + el.progress * 10) * 1.2 + 2.8;
+          ctx.arc(elX, elY, dotRadius, 0, Math.PI * 2);
+          ctx.fillStyle = "#C5A059";
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = "#C5A059";
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      });
+
+      // Render nodes on layout joints
+      nodes.forEach((node) => {
+        const distance = Math.hypot(node.x - mouseX, node.y - mouseY);
+        const active = distance < 120;
+
+        ctx.beginPath();
+        const baseRadius = Math.sin(tick + node.pulseOffset) * 0.8 + 2;
+        ctx.arc(node.x, node.y, active ? baseRadius + 1.5 : baseRadius, 0, Math.PI * 2);
+        ctx.fillStyle = active ? "#FFFFFF" : "rgba(197, 160, 89, 0.4)";
+        if (active) {
+          ctx.shadowBlur = 14;
+          ctx.shadowColor = "#C5A059";
+        }
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Trace terminal socket boundaries surrounding node
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, active ? 11 : 6, 0, Math.PI * 2);
+        ctx.strokeStyle = active ? "rgba(197, 160, 89, 0.55)" : "rgba(197, 160, 89, 0.14)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   return (
     <section id="home" className="relative h-screen grid grid-cols-12 overflow-hidden bg-navy-dark">
       <div className="col-span-12 lg:col-span-7 relative flex flex-col justify-center p-6 md:p-20 order-2 lg:order-1">
@@ -40,6 +246,11 @@ export default function Hero({
             referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-navy-dark via-navy-dark/40 to-transparent"></div>
+          {/* Interactive Conduction Elements Layer */}
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 z-10 w-full h-full pointer-events-none opacity-50"
+          />
         </div>
 
         <motion.div
