@@ -28,6 +28,7 @@ export default function Portfolio({
   const [activeGalleryIdx, setActiveGalleryIdx] = useState<number>(0);
   const [confirmDeleteIdx, setConfirmDeleteIdx] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>("ทั้งหมด");
+  const [newImgUrl, setNewImgUrl] = useState<string>("");
 
   const categories = [
     "ทั้งหมด",
@@ -93,8 +94,8 @@ export default function Portfolio({
       <div className="max-w-7xl mx-auto px-6">
         <div className="editorial-grid gap-12 mb-12">
           <div className="col-span-12 lg:col-span-6 space-y-4">
-            <span className="label-small text-gold uppercase tracking-widest font-mono flex items-center gap-2">
-              <Briefcase size={14} /> LIVE CONSTRUCTION PORTAL
+            <span className="label-small text-gold uppercase tracking-widest font-sans flex items-center gap-2">
+              <Briefcase size={14} /> คลังแฟ้มบันทึกความคืบหน้าหน้างานจริง
             </span>
             <h2 className="text-3xl md:text-5xl tracking-tighter uppercase font-tech text-navy-dark">
               แฟ้มสะสมผลงาน <br />
@@ -256,26 +257,29 @@ export default function Portfolio({
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex justify-between items-end">
-                          <span className="text-[10px] text-gold font-mono tracking-widest bg-navy-dark/80 px-2 py-1 rounded border border-gold/10 uppercase">
-                            รูปประกอบที่ {activeGalleryIdx + 1} / {galleryList.length}
+                          <span className="text-[10px] text-gold font-sans font-bold tracking-wide bg-navy-dark/90 px-3 py-1.5 rounded border border-gold/20">
+                            รูปที่ {activeGalleryIdx + 1} / {galleryList.length} รูป
                           </span>
                         </div>
                       </div>
 
                       {/* Gallery Thumbnail Strip */}
-                      <div className="space-y-2 mt-2">
-                        <span className="text-[9px] font-mono tracking-wider text-slate-400 block uppercase">
-                          🖼️ อัลบั้มภาพระบบงาน / Job-Site Actions ({galleryList.length})
-                        </span>
+                      <div className="space-y-4 mt-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[10px] font-sans font-bold tracking-wider text-slate-300 block uppercase">
+                            🖼️ อัลบั้มรูปภาพหน้างานจริง / ขั้นตอนการทำงาน ({galleryList.length} รูป)
+                          </span>
+                        </div>
+                        
                         <div className="flex flex-wrap gap-2.5">
                           {galleryList.map((gImg: string, gIdx: number) => (
                             <div
                               key={gIdx}
                               onClick={() => setActiveGalleryIdx(gIdx)}
-                              className={`relative w-16 h-12 bg-black overflow-hidden rounded-sm border cursor-pointer transition-all ${
+                              className={`relative w-20 h-14 bg-black overflow-hidden rounded-sm border cursor-pointer transition-all ${
                                 activeGalleryIdx === gIdx
-                                  ? "border-gold scale-105 shadow-md shadow-gold/15"
-                                  : "border-white/10 opacity-70 hover:opacity-100"
+                                  ? "border-gold scale-105 shadow-md shadow-gold/25"
+                                  : "border-white/10 opacity-75 hover:opacity-100"
                               }`}
                             >
                               <img
@@ -291,14 +295,14 @@ export default function Portfolio({
                                     e.stopPropagation();
                                     const updatedGallery = galleryList.filter((_, idxFilter) => idxFilter !== gIdx);
                                     handleUpdateField(selectedProjectIdx, "gallery", updatedGallery);
-                                    if (gIdx === 0 && updatedGallery[0]) {
+                                    if (proj.image === gImg && updatedGallery[0]) {
                                       handleUpdateField(selectedProjectIdx, "image", updatedGallery[0]);
                                     }
                                     setActiveGalleryIdx(0);
                                     triggerSavedToast();
                                   }}
-                                  className="absolute top-0.5 right-0.5 bg-red-600 hover:bg-red-700 text-white text-[8px] p-0.5 rounded shadow cursor-pointer flex items-center justify-center"
-                                  title="ลบรูปภาพนี้"
+                                  className="absolute top-0.5 right-0.5 bg-red-600 hover:bg-red-700 text-white text-[10px] p-1 rounded-sm shadow-md cursor-pointer flex items-center justify-center leading-none"
+                                  title="ลบรูปภาพนี้ออกจากแกลเลอรี"
                                 >
                                   🗑️
                                 </button>
@@ -308,9 +312,9 @@ export default function Portfolio({
 
                           {/* Upload New Photo to Gallery (Admin Mode) */}
                           {isAdminMode && (
-                            <label className="w-16 h-12 flex flex-col items-center justify-center border border-dashed border-gold/40 hover:border-gold rounded-sm bg-gold/5 hover:bg-gold/10 cursor-pointer transition-all text-gold">
-                              <UploadCloud size={14} />
-                              <span className="text-[7px] font-mono text-center font-bold mt-1 uppercase">ADD PHOTO</span>
+                            <label className="w-20 h-14 flex flex-col items-center justify-center border border-dashed border-gold/40 hover:border-gold rounded-sm bg-gold/5 hover:bg-gold/10 cursor-pointer transition-all text-gold">
+                              <UploadCloud size={16} />
+                              <span className="text-[8px] font-sans text-center font-bold mt-1 uppercase tracking-wider">อัปโหลดไฟล์รูป</span>
                               <input
                                 type="file"
                                 accept="image/*"
@@ -336,6 +340,91 @@ export default function Portfolio({
                           )}
                         </div>
                       </div>
+
+                      {/* Admin Image Control Panel */}
+                      {isAdminMode && (
+                        <div className="bg-navy-light/40 border border-gold/20 p-4.5 mt-2 space-y-4 rounded-sm text-left">
+                          <div className="flex items-center gap-2 pb-1 border-b border-white/5">
+                            <span className="w-1.5 h-3.5 bg-gold" />
+                            <span className="text-[10px] font-sans tracking-wider font-extrabold text-gold uppercase">
+                              🔧 ระบบบริหารจัดการรูปภาพ & สิทธิ์แอดมิน (ภาษาไทย)
+                            </span>
+                          </div>
+                          
+                          {/* 1. Add Image URL input */}
+                          <div className="space-y-2">
+                            <label className="text-[10px] text-slate-300 font-bold block">
+                              1. เพิ่มรูปภาพใหม่เข้าแกลเลอรีด้วยลิงก์ URL สากล:
+                            </label>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                value={newImgUrl}
+                                onChange={(e) => setNewImgUrl(e.target.value)}
+                                placeholder="วางที่อยู่ลิงก์รูปภาพตรงนี้ (เช่น https://images.unsplash.com/...)"
+                                className="flex-1 bg-[#050C18] border border-white/10 rounded-none px-3 py-2 text-xs text-white placeholder-white/20 focus:border-gold outline-none font-mono"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (!newImgUrl.trim()) return;
+                                  const updatedGallery = [...galleryList, newImgUrl.trim()];
+                                  handleUpdateField(selectedProjectIdx, "gallery", updatedGallery);
+                                  setActiveGalleryIdx(updatedGallery.length - 1);
+                                  setNewImgUrl("");
+                                  triggerSavedToast();
+                                }}
+                                className="bg-gold hover:bg-amber-400 text-navy-dark px-4 py-2 text-xs font-black uppercase rounded-sm flex items-center gap-1.5 cursor-pointer font-sans"
+                              >
+                                ➕ เพิ่มรูปภาพ
+                              </button>
+                            </div>
+                            <p className="text-[8px] text-slate-400 font-sans mt-0.5">
+                              *หมายเหตุ: แนะนำการฝากรูปบนเว็บหรือลิงก์ URL เพื่อประหยัดพื้นที่จัดเก็บและเพิ่มความปลอดภัยของข้อมูลค่ะ
+                            </p>
+                          </div>
+
+                          {/* 2. Actions for selected image */}
+                          <div className="border-t border-white/5 pt-3.5 space-y-2.5">
+                            <label className="text-[10px] text-slate-300 font-bold block">
+                              2. จัดการรูปภาพที่แสดงผลด้านบนอยู่ในขณะนี้ (รูปที่ {activeGalleryIdx + 1}):
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleUpdateField(selectedProjectIdx, "image", activeImage);
+                                  triggerSavedToast();
+                                }}
+                                className="flex-1 min-w-[150px] bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 text-xs font-bold rounded-sm flex items-center justify-center gap-2 cursor-pointer border border-emerald-500/20"
+                              >
+                                ⭐ ตั้งรูปที่เลือกนี้เป็นหน้าปกหลัก
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (window.confirm("คุณมั่นใจที่จะลบรูปนี้ออกจากอัลบั้มรูปของโครงการและขั้นตอนการดำเนินงานนี้ใช่ไหมคะ?")) {
+                                    const updatedGallery = galleryList.filter((_, idxFilter) => idxFilter !== activeGalleryIdx);
+                                    if (updatedGallery.length === 0) {
+                                      alert("โครงการต้องมีรูปภาพเหลือประดับอย่างน้อย 1 รูปค่ะ");
+                                      return;
+                                    }
+                                    handleUpdateField(selectedProjectIdx, "gallery", updatedGallery);
+                                    if (proj.image === activeImage && updatedGallery[0]) {
+                                      handleUpdateField(selectedProjectIdx, "image", updatedGallery[0]);
+                                    }
+                                    setActiveGalleryIdx(0);
+                                    triggerSavedToast();
+                                  }
+                                }}
+                                className="flex-1 bg-red-650 hover:bg-red-700 text-white px-3.5 py-2 text-xs font-bold rounded-sm flex items-center justify-center gap-1.5 cursor-pointer border border-red-500/10 bg-red-600"
+                              >
+                                🗑️ ลบรูปภาพนี้
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Right Side: Details Sheet & Info (5 Cols) */}
@@ -514,7 +603,7 @@ export default function Portfolio({
               onClick={handleAddProject}
               className="bg-navy-dark text-white hover:bg-gold hover:text-navy-dark border border-gold/40 hover:border-gold px-8 py-4.5 text-xs font-bold uppercase tracking-widest rounded transition-all flex items-center gap-2 shadow-2xl cursor-pointer"
             >
-              <Plus size={16} /> ADD NEW PROJECT (เพิ่มโครงการใหม่)
+              <Plus size={16} /> ➕ เพิ่มโครงการใหม่เข้าระบบคลังผลงาน
             </button>
             <button
               type="button"
@@ -529,7 +618,7 @@ export default function Portfolio({
               className="bg-red-900/10 border border-red-500/25 hover:bg-red-950 hover:border-red-500 text-red-500 hover:text-white px-8 py-4.5 text-xs font-bold uppercase tracking-widest rounded transition-all flex items-center gap-2 shadow-2xl cursor-pointer border-solid"
               title="กู้คืนข้อมูลหน้าผลงานเริ่มต้นจากไฟล์ระบบเพื่อแก้ปัญหางานหาย"
             >
-              <RotateCcw size={16} /> RESTORE DEFAULTS (กู้คืนผลงานดั้งเดิม)
+              <RotateCcw size={16} /> 🔄 คืนค่าแกลเลอรีผลงานดั้งเดิม
             </button>
           </div>
         )}
