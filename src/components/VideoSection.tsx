@@ -95,6 +95,18 @@ export default function VideoSection({
   const activeVideo = videoPlaylists[activeVideoIdx] || { title: "", subtitle: "", videoUrl: "" };
   const effectiveVideoUrl = tempVideoObjectUrl || activeVideo.videoUrl;
 
+  // Detect and extract Google Drive file preview URL if applicable
+  const getGoogleDriveEmbedUrl = (url: string): string | null => {
+    if (!url) return null;
+    const match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      return `https://drive.google.com/file/d/${match[1]}/preview`;
+    }
+    return null;
+  };
+
+  const gDriveEmbedUrl = getGoogleDriveEmbedUrl(effectiveVideoUrl);
+
   const handleApplyVideoConfig = () => {
     setVideoApplyStatus("pending");
     setTimeout(async () => {
@@ -167,16 +179,26 @@ export default function VideoSection({
         {/* Video Player Display */}
         <div className={`${isAdminMode ? "w-full" : "col-span-1 lg:col-span-2"} aspect-video bg-navy-dark relative overflow-hidden border border-navy-dark shadow-2xl group rounded-sm`}>
           {isVideoPlaying ? (
-            <video 
-              src={effectiveVideoUrl} 
-              controls 
-              autoPlay 
-              className="w-full h-full object-cover z-10 relative"
-              onError={() => {
-                console.error("Video load error");
-                setIsVideoPlaying(false);
-              }}
-            />
+            gDriveEmbedUrl ? (
+              <iframe 
+                src={gDriveEmbedUrl}
+                className="w-full h-full z-10 relative border-0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                title="Google Drive Video Player"
+              />
+            ) : (
+              <video 
+                src={effectiveVideoUrl} 
+                controls 
+                autoPlay 
+                className="w-full h-full object-cover z-10 relative"
+                onError={() => {
+                  console.error("Video load error");
+                  setIsVideoPlaying(false);
+                }}
+              />
+            )
           ) : (
             <div 
               onClick={() => setIsVideoPlaying(true)}
@@ -211,12 +233,14 @@ export default function VideoSection({
             </div>
           )}
           {/* Realtime ambient background */}
-          <video 
-            src={effectiveVideoUrl} 
-            muted 
-            loop 
-            className="absolute inset-0 w-full h-full object-cover opacity-20 blur-sm scale-110" 
-          />
+          {!gDriveEmbedUrl && (
+            <video 
+              src={effectiveVideoUrl} 
+              muted 
+              loop 
+              className="absolute inset-0 w-full h-full object-cover opacity-20 blur-sm scale-110" 
+            />
+          )}
         </div>
 
         {/* Video Info Display or Admin Editor Sidebar */}
