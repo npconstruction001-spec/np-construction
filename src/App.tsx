@@ -1,0 +1,351 @@
+import React, { useState, useEffect } from "react";
+import { Link, Lock, Unlock, ShieldCheck } from "lucide-react";
+import { Service, Project, VideoItem } from "./types";
+import { 
+  SERVICES, 
+  PORTFOLIO, 
+  NAV_LINKS 
+} from "./constants/data";
+
+// Component Imports
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import ServicesSection from "./components/Services";
+import Stats from "./components/Stats";
+import Estimator from "./components/Estimator";
+import Timeline from "./components/Timeline";
+import PortfolioSection from "./components/Portfolio";
+import VideoSection from "./components/VideoSection";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
+import AuthModal from "./components/AuthModal";
+import Toast from "./components/Toast";
+
+export default function App() {
+  // Global States
+  const [scrolled, setScrolled] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isAdminMode, setIsAdminMode] = useState<boolean>(() => {
+    return localStorage.getItem("np_admin_is_logged_in") === "true";
+  });
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    return localStorage.getItem("np_admin_is_logged_in") === "true";
+  });
+
+  // Security and Validation Modals State
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+  const [authEmail, setAuthEmail] = useState<string>("");
+  const [authPassword, setAuthPassword] = useState<string>("");
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authSuccess, setAuthSuccess] = useState<boolean>(false);
+  const [showSavedToast, setShowSavedToast] = useState<boolean>(false);
+
+  // Editable Content States (Hero, About, Services)
+  const [heroTitleL1, setHeroTitleL1] = useState<string>(() => {
+    return localStorage.getItem("np_hero_title_l1") || "PRECISION";
+  });
+  const [heroTitleL2, setHeroTitleL2] = useState<string>(() => {
+    return localStorage.getItem("np_hero_title_l2") || "SAFETY";
+  });
+  const [heroTitleGold, setHeroTitleGold] = useState<string>(() => {
+    return localStorage.getItem("np_hero_title_gold") || "ENGINEERING";
+  });
+  const [heroSubtitle, setHeroSubtitle] = useState<string>(() => {
+    return localStorage.getItem("np_hero_subtitle") || "รับเหมาก่อสร้างโยธา วางสถานีระบบไฟฟ้า และงานเครื่องกลครอบคลุมทุกมิติตามมาตรฐานวิชาชีพควบคุม";
+  });
+
+  const [aboutTitleL1, setAboutTitleL1] = useState<string>(() => {
+    return localStorage.getItem("np_about_title_l1") || "PRECISE ENGINEERING FOR";
+  });
+  const [aboutTitleGold, setAboutTitleGold] = useState<string>(() => {
+    return localStorage.getItem("np_about_title_gold") || "INDUSTRIAL INFRASTRUCTURE";
+  });
+  const [aboutDesc, setAboutDesc] = useState<string>(() => {
+    return localStorage.getItem("np_about_desc") || "ห้างหุ้นส่วนจำกัด เอ็นพี คอนดักชั่น (NP CONDUCTION Limited Partnership) เปี่ยมด้วยศักยภาพวิศวกรรมก่อสร้างและวางระบบสาธารณูปโภคขั้นพื้นฐานระดับควบคุม ครอบคลุมการบูรณาการระบบก่อสร้างอาคารเหล็กอุตสาหกรรม คลุมหน้างานประแจต่อสายไฟกำลังสูง และส่งมอบระบบระบายน้ำ ท่อสุขาภิบาลโยธา ตลอดจนโครงสร้างหม้อแปลงไฟฟ้าแรงงานแกร่งหนาทั่วราชอาณาจักรไทย";
+  });
+  const [aboutBullets, setAboutBullets] = useState<string[]>(() => {
+    const raw = localStorage.getItem("np_about_bullets_v2");
+    return raw ? JSON.parse(raw) : [
+      "โครงสร้างฐานเสาเข็มมั่นแกร่ง",
+      "เชื่อมโยงตู้นิรภัยวิศวกรรมไฟฟ้า",
+      "คุมความเสี่ยง ISO Safety มาตรฐานสากล"
+    ];
+  });
+
+  const [servicesSectionTitle, setServicesSectionTitle] = useState<string>(() => {
+    return localStorage.getItem("np_services_section_title") || "เชี่ยวชาญบริการ";
+  });
+  const [servicesSectionGold, setServicesSectionGold] = useState<string>(() => {
+    return localStorage.getItem("np_services_section_gold") || "วิศวกรรมครบวงจร";
+  });
+  const [servicesSectionDesc, setServicesSectionDesc] = useState<string>(() => {
+    return localStorage.getItem("np_services_section_desc") || "เราส่งมอบผลงานจากความประณีตและการร่วมมือกับสถาปนิกและวิศวกรผู้เชี่ยวชาญ คุมความท้าทายในระดับโครงสร้าง เสา คานคอดิน ถิ่นงานระบบอย่างทรหด";
+  });
+
+  // Dynamic Lists Data (Services, Portfolio, Videos)
+  const [servicesData, setServicesData] = useState<Service[]>(() => {
+    const saved = localStorage.getItem("np_services_data_v3");
+    return saved ? JSON.parse(saved) : SERVICES;
+  });
+
+  const [portfolio, setPortfolio] = useState<Project[]>(() => {
+    const saved = localStorage.getItem("np_portfolio_data");
+    return saved ? JSON.parse(saved) : PORTFOLIO;
+  });
+
+  const [videoPlaylists, setVideoPlaylists] = useState<VideoItem[]>(() => {
+    const saved = localStorage.getItem("np_video_playlist_v3");
+    const defaultVideos = [
+      {
+        title: "THE ENGINEERING JOURNEY",
+        subtitle: "Corporate Video Showcase",
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-construction-worker-at-a-site-working-with-concrete-41584-large.mp4"
+      },
+      {
+        title: "งานติดตั้งและเดินระบบไฟฟ้าตู้ควบคุม MDB",
+        subtitle: "MDB Substation Showcase Video",
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-welder-working-on-a-pipeline-42614-large.mp4"
+      }
+    ];
+    return saved ? JSON.parse(saved) : defaultVideos;
+  });
+
+  // Track Window Scroll to dynamically style Header
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Sync edits automatically as they are entered (Offline First Persistence)
+  useEffect(() => {
+    localStorage.setItem("np_hero_title_l1", heroTitleL1);
+    localStorage.setItem("np_hero_title_l2", heroTitleL2);
+    localStorage.setItem("np_hero_title_gold", heroTitleGold);
+    localStorage.setItem("np_hero_subtitle", heroSubtitle);
+  }, [heroTitleL1, heroTitleL2, heroTitleGold, heroSubtitle]);
+
+  useEffect(() => {
+    localStorage.setItem("np_about_title_l1", aboutTitleL1);
+    localStorage.setItem("np_about_title_gold", aboutTitleGold);
+    localStorage.setItem("np_about_desc", aboutDesc);
+    localStorage.setItem("np_about_bullets_v2", JSON.stringify(aboutBullets));
+  }, [aboutTitleL1, aboutTitleGold, aboutDesc, aboutBullets]);
+
+  useEffect(() => {
+    localStorage.setItem("np_services_section_title", servicesSectionTitle);
+    localStorage.setItem("np_services_section_gold", servicesSectionGold);
+    localStorage.setItem("np_services_section_desc", servicesSectionDesc);
+  }, [servicesSectionTitle, servicesSectionGold, servicesSectionDesc]);
+
+  useEffect(() => {
+    localStorage.setItem("np_services_data_v3", JSON.stringify(servicesData));
+  }, [servicesData]);
+
+  // Utility to fire aesthetic green save indicators
+  const triggerSavedToast = () => {
+    setShowSavedToast(true);
+    setTimeout(() => setShowSavedToast(false), 3000);
+  };
+
+  // Switch Admin Mode or trigger security dialog
+  const handleToggleAdminMode = () => {
+    if (isAdminMode) {
+      setIsAdminMode(false);
+      triggerSavedToast();
+    } else {
+      if (isLoggedIn) {
+        setIsAdminMode(true);
+        triggerSavedToast();
+      } else {
+        setAuthError(null);
+        setAuthEmail("");
+        setAuthPassword("");
+        setShowAuthModal(true);
+      }
+    }
+  };
+
+  // Submit Admin gateway credentials
+  const handleAuthSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+
+    // Secure credentials matching original requirements
+    if (authEmail === "npconstruction001@gmail.com" && authPassword === "np2026") {
+      setAuthSuccess(true);
+      setTimeout(() => {
+        localStorage.setItem("np_admin_is_logged_in", "true");
+        localStorage.setItem("np_admin_email", authEmail);
+        setIsLoggedIn(true);
+        setIsAdminMode(true);
+        setShowAuthModal(false);
+        setAuthSuccess(false);
+        triggerSavedToast();
+        const target = document.getElementById("portfolio");
+        if (target) target.scrollIntoView({ behavior: "smooth" });
+      }, 1000);
+    } else {
+      setAuthError("อีเมลผู้ดูแลระบบหรือรหัสผ่าน Access Code สำหรับบริษัทไม่ถูกต้อง ไม่สามารถเข้าสิทธิ์ด่วนได้ค่ะ 🔐");
+    }
+  };
+
+  // Invalidate session
+  const handleLogout = () => {
+    localStorage.removeItem("np_admin_is_logged_in");
+    localStorage.removeItem("np_admin_email");
+    setIsLoggedIn(false);
+    setIsAdminMode(false);
+    triggerSavedToast();
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-[#0F172A] font-sans selection:bg-gold selection:text-navy-dark leading-normal antialiased">
+      {/* Dynamic Header & Mobile Drawer Navigation */}
+      <Header 
+        isLoggedIn={isLoggedIn}
+        isAdminMode={isAdminMode}
+        scrolled={scrolled}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        handleLogout={handleLogout}
+        handleToggleAdminMode={handleToggleAdminMode}
+      />
+
+      <main>
+        {/* Hero Landing */}
+        <Hero 
+          isAdminMode={isAdminMode}
+          heroTitleL1={heroTitleL1}
+          setHeroTitleL1={setHeroTitleL1}
+          heroTitleL2={heroTitleL2}
+          setHeroTitleL2={setHeroTitleL2}
+          heroTitleGold={heroTitleGold}
+          setHeroTitleGold={setHeroTitleGold}
+          heroSubtitle={heroSubtitle}
+          setHeroSubtitle={setHeroSubtitle}
+          triggerSavedToast={triggerSavedToast}
+          setIsAdminMode={setIsAdminMode}
+        />
+
+        {/* Corporate Profile Definition */}
+        <About 
+          isAdminMode={isAdminMode}
+          aboutTitleL1={aboutTitleL1}
+          setAboutTitleL1={setAboutTitleL1}
+          aboutTitleGold={aboutTitleGold}
+          setAboutTitleGold={setAboutTitleGold}
+          aboutDesc={aboutDesc}
+          setAboutDesc={setAboutDesc}
+          aboutBullets={aboutBullets}
+          setAboutBullets={setAboutBullets}
+          triggerSavedToast={triggerSavedToast}
+          setIsAdminMode={setIsAdminMode}
+        />
+
+        {/* Dynamic Services Matrix Grid */}
+        <ServicesSection 
+          isAdminMode={isAdminMode}
+          servicesSectionTitle={servicesSectionTitle}
+          setServicesSectionTitle={setServicesSectionTitle}
+          servicesSectionGold={servicesSectionGold}
+          setServicesSectionGold={setServicesSectionGold}
+          servicesSectionDesc={servicesSectionDesc}
+          setServicesSectionDesc={setServicesSectionDesc}
+          servicesData={servicesData}
+          setServicesData={setServicesData}
+          triggerSavedToast={triggerSavedToast}
+          setIsAdminMode={setIsAdminMode}
+        />
+
+        {/* Metric Milestones */}
+        <Stats />
+
+        {/* Interactive CAD/Spec Calculator */}
+        <Estimator />
+
+        {/* Step Timeline Workflow */}
+        <Timeline />
+
+        {/* Custom Portfolios and Uploads */}
+        <PortfolioSection 
+          isAdminMode={isAdminMode}
+          portfolio={portfolio}
+          setPortfolio={setPortfolio}
+          triggerSavedToast={triggerSavedToast}
+        />
+
+        {/* Media Showcase Section */}
+        <div className="max-w-7xl mx-auto px-6 pb-24">
+          <VideoSection 
+            isAdminMode={isAdminMode}
+            setIsAdminMode={setIsAdminMode}
+            videoPlaylists={videoPlaylists}
+            setVideoPlaylists={setVideoPlaylists}
+            triggerSavedToast={triggerSavedToast}
+          />
+        </div>
+
+        {/* Contact form and Simulator Integrations */}
+        <Contact />
+      </main>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Security Gate authentication modal */}
+      <AuthModal 
+        showAuthModal={showAuthModal}
+        setShowAuthModal={setShowAuthModal}
+        authEmail={authEmail}
+        setAuthEmail={setAuthEmail}
+        authPassword={authPassword}
+        setAuthPassword={setAuthPassword}
+        authError={authError}
+        setAuthError={setAuthError}
+        authSuccess={authSuccess}
+        setAuthSuccess={setAuthSuccess}
+        handleAuthSubmit={handleAuthSubmit}
+        setIsLoggedIn={setIsLoggedIn}
+        setIsAdminMode={setIsAdminMode}
+      />
+
+      {/* Pop notifications */}
+      <Toast showSavedToast={showSavedToast} />
+
+      {/* Persistent Floating Admin Trigger Button */}
+      <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2.5">
+        {isAdminMode && (
+          <div className="bg-navy-dark text-white border border-gold/40 px-4 py-2 rounded-sm text-[10px] font-sans font-bold shadow-2xl flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>กำลังอยู่ในโหมดผู้ดูแล: กดเครื่องมือแก้ไขด้านล่างได้ทันทีค่ะ</span>
+          </div>
+        )}
+        
+        <button
+          onClick={handleToggleAdminMode}
+          className={`shadow-[0_20px_50px_rgba(0,0,0,0.3)] md:px-6 px-5 py-4.5 rounded-full font-bold text-xs uppercase tracking-widest transition-all flex items-center gap-3 border cursor-pointer ${
+            isAdminMode 
+              ? "bg-gold text-navy-dark border-gold scale-105 active:scale-95 shadow-gold/20" 
+              : "bg-navy-dark text-white border-gold/40 hover:bg-gold hover:text-navy-dark hover:border-gold hover:scale-105 active:scale-95"
+          }`}
+          title="สลับโหมดผู้ดูแลเพื่อแก้ไขรูปภาพและวิดีโอ"
+        >
+          {isAdminMode ? (
+            <ShieldCheck size={16} className="text-navy-dark" />
+          ) : isLoggedIn ? (
+            <Unlock size={16} className="text-gold" />
+          ) : (
+            <Lock size={16} className="text-gold" />
+          )}
+          <span className="font-sans font-black tracking-normal">
+            {isAdminMode ? "ปิดโหมดแก้ไข" : "สลับเปิดโหมดผู้ดูแลแก้ไขด่วน 📷"}
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+}
