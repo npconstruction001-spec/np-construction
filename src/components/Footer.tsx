@@ -1,5 +1,6 @@
 import React from "react";
 import { NAV_LINKS } from "../constants/data";
+import CompanyLogo from "./CompanyLogo";
 
 interface FooterProps {
   onSecretClick?: () => void;
@@ -15,12 +16,10 @@ export default function Footer({ onSecretClick }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-white text-slate-950 font-black flex items-center justify-center text-xs">
-                NP
-              </div>
+              <CompanyLogo className="w-11 h-11" lightMode={false} />
               <div className="flex flex-col text-left">
                 <span className="text-xl font-bold tracking-tight leading-none uppercase text-white">
-                  เอ็นพี คอนดักชั่น
+                  NP CONDUCTION
                 </span>
                 <span className="text-[8px] font-mono tracking-widest uppercase text-red-500 font-extrabold mt-1">
                   Limited Partnership

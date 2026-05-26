@@ -2,6 +2,7 @@ import React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ShieldCheck, Lock, Menu, X, ArrowUpRight, PhoneCall } from "lucide-react";
 import { NAV_LINKS } from "../constants/data";
+import CompanyLogo from "./CompanyLogo";
 
 interface HeaderProps {
   isLoggedIn: boolean;
@@ -35,26 +36,20 @@ export default function Header({
       >
         <div className="max-w-7xl mx-auto px-6 md:px-8 flex justify-between items-center">
           
-          {/* Logo Brand mimicking AESCON premium corporate signature */}
+          {/* Logo Brand mimicking AESCON premium corporate signature with pristine circular logo seal */}
           <div 
             onClick={onSecretClick}
             className="flex items-center gap-3 cursor-pointer group select-none"
             title="NP CONDUCTION"
           >
-            {/* Real aesthetic corporate constructor block icon */}
-            <div className={`w-10 h-10 border flex items-center justify-center transition-all ${
-              scrolled 
-                ? "bg-slate-900 text-white border-slate-900 group-hover:bg-red-600 group-hover:border-red-600" 
-                : "bg-white text-slate-950 border-white group-hover:bg-red-600 group-hover:border-red-600 group-hover:text-white"
-            }`}>
-              <span className="text-sm font-black tracking-tighter">NP</span>
-            </div>
+            {/* Real corporate constructor circular seal logo */}
+            <CompanyLogo className="w-11 h-11 transition-transform group-hover:scale-105 duration-300" lightMode={scrolled} />
             
             <div className="flex flex-col text-left">
               <span className={`text-base font-black tracking-tight leading-none font-sans uppercase ${
                 scrolled ? "text-slate-900" : "text-white"
               }`}>
-                เอ็นพี คอนดักชั่น
+                NP CONDUCTION
               </span>
               <span className="text-[8px] font-mono tracking-widest uppercase text-red-500 font-extrabold mt-1">
                 Engineering &amp; Construction
