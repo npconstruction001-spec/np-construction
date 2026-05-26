@@ -460,6 +460,28 @@ export default function Hero({
 
         </div>
       </div>
+
+      {/* Scroll Down Indicator */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none">
+        <div className="w-[1.5px] h-14 bg-white/10 overflow-hidden relative rounded-full">
+          <motion.div 
+            className="absolute top-0 left-0 right-0 w-full bg-red-500 rounded-full"
+            initial={{ height: "0%", top: "0%" }}
+            animate={{ 
+              height: ["0%", "80%", "0%"],
+              top: ["0%", "10%", "90%"]
+            }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        </div>
+        <span className="text-[9px] font-mono tracking-[0.3em] uppercase text-slate-400 font-extrabold select-none">
+          SCROLL
+        </span>
+      </div>
     </section>
   );
 }

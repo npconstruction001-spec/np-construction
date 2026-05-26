@@ -90,7 +90,7 @@ export default function App() {
   });
 
   const [portfolio, setPortfolio] = useState<Project[]>(() => {
-    const saved = localStorage.getItem("np_portfolio_data");
+    const saved = localStorage.getItem("np_portfolio_data_v7");
     return saved ? JSON.parse(saved) : PORTFOLIO;
   });
 

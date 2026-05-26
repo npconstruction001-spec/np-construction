@@ -51,7 +51,7 @@ export default function Portfolio({
     e.stopPropagation();
     const filtered = portfolio.filter((_, i) => i !== idx);
     setPortfolio(filtered);
-    localStorage.setItem("np_portfolio_data", JSON.stringify(filtered));
+    localStorage.setItem("np_portfolio_data_v7", JSON.stringify(filtered));
     setConfirmDeleteIdx(null);
     if (selectedProjectIdx === idx) {
       setSelectedProjectIdx(null);
@@ -76,7 +76,7 @@ export default function Portfolio({
     };
     const updated = [...portfolio, newProj];
     setPortfolio(updated);
-    localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+    localStorage.setItem("np_portfolio_data_v7", JSON.stringify(updated));
     triggerSavedToast();
   };
 
@@ -87,7 +87,7 @@ export default function Portfolio({
       [field]: val
     };
     setPortfolio(updated);
-    localStorage.setItem("np_portfolio_data", JSON.stringify(updated));
+    localStorage.setItem("np_portfolio_data_v7", JSON.stringify(updated));
   };
 
   return (
@@ -702,7 +702,7 @@ export default function Portfolio({
               onClick={() => {
                 if (window.confirm("คุณต้องการคืนค่าผลงานทั้งหมดกลับเป็นค่าเริ่มต้นหรือไม่? ข้อมูลแก้ไขก่อนหน้าจะถูกเลือกทดแทนใหม่ทั้งหมดค่ะ")) {
                   setPortfolio(PORTFOLIO);
-                  localStorage.setItem("np_portfolio_data", JSON.stringify(PORTFOLIO));
+                  localStorage.setItem("np_portfolio_data_v7", JSON.stringify(PORTFOLIO));
                   setActiveFilter("ทั้งหมด");
                   triggerSavedToast();
                 }
