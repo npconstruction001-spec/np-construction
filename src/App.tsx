@@ -193,7 +193,7 @@ export default function App() {
     setAuthError(null);
 
     // Secure credentials matching original requirements
-    if (authEmail === "npconstruction001@gmail.com" && authPassword === "np2026") {
+    if (authEmail === "npconstruction001@gmail.com" && authPassword === "np0934788375") {
       setAuthSuccess(true);
       setTimeout(() => {
         localStorage.setItem("np_admin_is_logged_in", "true");

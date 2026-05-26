@@ -98,7 +98,7 @@ export default function AuthModal({
                     required
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
-                    placeholder="เช่น npconstruction001@gmail.com"
+                    placeholder="ระบุอีเมลผู้ดูแลระบบ"
                     className="w-full bg-navy-light/60 border border-white/10 p-4.5 rounded-sm outline-none focus:border-gold transition-colors text-xs font-mono"
                   />
                 </div>
@@ -108,7 +108,6 @@ export default function AuthModal({
                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block font-mono">
                       รหัสผ่านเข้าถึงด่วน (ACCESS CODE)
                     </label>
-                    <span className="text-[9px] text-gold/60 font-mono">รหัสเริ่มต้นคือ: np2026</span>
                   </div>
                   <input
                     type="password"
@@ -136,35 +135,6 @@ export default function AuthModal({
                     className="w-full bg-gold hover:bg-gold-hover text-navy-dark py-4 uppercase font-bold tracking-widest text-xs rounded-sm transition-all shadow-xl flex items-center justify-center gap-2 cursor-pointer font-sans"
                   >
                     <ShieldCheck size={14} /> ตรวจสอบสิทธิ์และเปิดใช้งานเครื่องมือ
-                  </button>
-                </div>
-
-                {/* Smart Auto Authentication Helper */}
-                <div className="border-t border-white/5 pt-4 flex flex-col gap-2">
-                  <span className="text-[9px] text-slate-500 font-mono text-center">
-                    — หรือใช้งานระบบ One-click Verification ด้านล่าง —
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAuthEmail("npconstruction001@gmail.com");
-                      setAuthPassword("np2026");
-                      setAuthError(null);
-                      setAuthSuccess(true);
-                      setTimeout(() => {
-                        localStorage.setItem("np_admin_is_logged_in", "true");
-                        localStorage.setItem("np_admin_email", "npconstruction001@gmail.com");
-                        setIsLoggedIn(true);
-                        setIsAdminMode(true);
-                        setShowAuthModal(false);
-                        setAuthSuccess(false);
-                        const target = document.getElementById("portfolio");
-                        if (target) target.scrollIntoView({ behavior: "smooth" });
-                      }, 1000);
-                    }}
-                    className="w-full bg-emerald-950/40 hover:bg-emerald-900/40 text-emerald-400 border border-emerald-950/50 py-2.5 rounded-sm text-[10px] font-sans font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                  >
-                    ⚡ เข้าสู่ระบบอัตโนมัติด้วยบัญชีปัจจุบันของคุณ (npconstruction001@gmail.com)
                   </button>
                 </div>
               </form>
